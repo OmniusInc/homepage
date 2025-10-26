@@ -60,26 +60,30 @@ export function HeroSection() {
         >
           <a
             href="#solutions"
-            className="block text-base text-white/80 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors"
           >
+            <Image src="/images/logo_mark.png" alt="" width={16} height={16} />
             Solutions ›
           </a>
           <a
             href="#about"
-            className="block text-base text-white/80 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors"
           >
+            <Image src="/images/logo_mark.png" alt="" width={16} height={16} />
             About Us ›
           </a>
           <a
             href="#careers"
-            className="block text-base text-white/80 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors"
           >
+            <Image src="/images/logo_mark.png" alt="" width={16} height={16} />
             Careers ›
           </a>
           <a
             href="#contact"
-            className="block text-base text-white/80 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors"
           >
+            <Image src="/images/logo_mark.png" alt="" width={16} height={16} />
             Contact ›
           </a>
         </motion.nav>
