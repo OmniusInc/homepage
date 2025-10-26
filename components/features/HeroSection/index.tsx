@@ -7,7 +7,7 @@ import { TiledParticles } from './TiledParticles';
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-[#1a1f2e] via-[#252b3d] to-[#2d3548]">
+    <section className="relative min-h-screen flex items-center bg-black">
       {/* タイル状パーティクル */}
       <TiledParticles />
 

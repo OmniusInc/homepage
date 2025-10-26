@@ -136,7 +136,7 @@ function SimpleTileGrid() {
     <group
       ref={groupRef}
       position={[0, 0, 0]}
-      rotation={[-Math.PI * 0.18, -Math.PI * 0.08, -Math.PI * 0.08]}
+      rotation={[-Math.PI * 0.15, -Math.PI * 0.06, -Math.PI * 0.06]}
     >
       {tiles}
     </group>
@@ -148,7 +148,7 @@ export function TiledParticles() {
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
       <Canvas
         camera={{
-          position: [5, 0, 22],
+          position: [5, 0, 26],
           fov: 75,
           near: 0.1,
           far: 1000,
@@ -167,55 +167,10 @@ export function TiledParticles() {
         <Environment preset="night" background={false} blur={0.8} />
 
         {/* 暗めの環境光 - 光の差し込みを引き立てる */}
-        <ambientLight intensity={0.15} color="#1a1f2e" />
+        <ambientLight intensity={0.3} color="#1a1f2e" />
 
-        {/* 強烈なメイン木漏れ日 - 右上から黄金色の光 */}
-        <directionalLight position={[30, 35, 25]} intensity={5.5} color="#ffd700" castShadow />
-
-        {/* サブ木漏れ日 - 左上からオレンジ色の光 */}
-        <directionalLight position={[-25, 30, 20]} intensity={4.0} color="#ffb347" />
-
-        {/* 逆光 - 後ろから温かい光 */}
-        <directionalLight position={[0, -15, -20]} intensity={3.5} color="#ffa500" />
-
-        {/* 集中的な木漏れ日スポット1 - 右上 */}
-        <spotLight
-          position={[35, 40, 30]}
-          angle={0.25}
-          penumbra={0.95}
-          intensity={8.0}
-          color="#fff4cc"
-          distance={90}
-        />
-
-        {/* 集中的な木漏れ日スポット2 - 左 */}
-        <spotLight
-          position={[-30, 35, 28]}
-          angle={0.3}
-          penumbra={0.92}
-          intensity={6.5}
-          color="#ffe4b3"
-          distance={85}
-        />
-
-        {/* 集中的な木漏れ日スポット3 - 中央上 */}
-        <spotLight
-          position={[5, 38, 26]}
-          angle={0.28}
-          penumbra={0.93}
-          intensity={7.0}
-          color="#fff9e6"
-          distance={80}
-        />
-
-        {/* 暖色のアクセントライト */}
-        <pointLight
-          position={[20, 25, 15]}
-          intensity={4.0}
-          color="#ffcc66"
-          distance={50}
-          decay={2}
-        />
+        {/* メインの太陽光 - 右上から黄金色の光 */}
+        <directionalLight position={[30, 35, 25]} intensity={4.5} color="#ffd700" castShadow />
 
         {/* タイルグリッド */}
         <SimpleTileGrid />
