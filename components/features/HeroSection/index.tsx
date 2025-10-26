@@ -98,24 +98,6 @@ export function HeroSection() {
               INNOVATE. CREATE. LEAD.
             </h2>
           </motion.div>
-
-          {/* Center - Empty (giant Omnius is in background) */}
-          <div className="hidden lg:block" />
-
-          {/* Right - SYSTEMS. AI. FUTURE. + Video Frame */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-white space-y-8"
-          >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-cyan-400 text-center lg:text-left">
-              SYSTEMS. AI. FUTURE.
-            </h2>
-            <div className="flex justify-center lg:justify-start">
-              <VideoFrame />
-            </div>
-          </motion.div>
         </div>
       </div>
     </section>
