@@ -1,8 +1,54 @@
 @import 'tailwindcss';
 
+/* デザイントークン - ロゴのグラデーションカラーを基準に */
 :root {
+  /* 基本カラー */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1a1a1a;
+
+  /* ブランドカラー（ロゴのグラデーション） */
+  --brand-purple: #8b5cf6;
+  --brand-blue: #3b82f6;
+  --brand-cyan: #06b6d4;
+  --brand-green: #10b981;
+
+  /* グラデーション（ロゴモチーフ） */
+  --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #10b981 100%);
+  --gradient-subtle: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.1) 0%,
+    rgba(59, 130, 246, 0.1) 50%,
+    rgba(16, 185, 129, 0.1) 100%
+  );
+
+  /* グラデーションバリエーション */
+  --gradient-purple-blue: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+  --gradient-blue-cyan: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --gradient-cyan-green: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+
+  /* 円形サイズ */
+  --circle-sm: 200px;
+  --circle-md: 400px;
+  --circle-lg: 600px;
+  --circle-xl: 800px;
+
+  /* ニュートラルカラー */
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
+
+  /* セマンティックカラー */
+  --text-primary: #1a1a1a;
+  --text-secondary: #525252;
+  --text-tertiary: #a3a3a3;
+  --border-color: #e5e5e5;
 }
 
 @theme inline {
@@ -10,17 +56,69 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* カスタムカラーをTailwindで使えるように */
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-green: var(--brand-green);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
+    'Yu Gothic', YuGothic, Meiryo, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* スムーススクロール */
+html {
+  scroll-behavior: smooth;
+}
+
+/* グロー効果 */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    filter: blur(40px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(60px);
+  }
+}
+
+.glow-purple {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+  animation: glow-pulse 4s ease-in-out infinite;
+}
+
+.glow-cyan {
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, transparent 70%);
+  animation: glow-pulse 5s ease-in-out infinite;
+}
+
+.glow-blue {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%);
+  animation: glow-pulse 4.5s ease-in-out infinite;
+}
+
+/* ネオンエフェクト */
+.neon-border {
+  box-shadow:
+    0 0 10px rgba(6, 182, 212, 0.5),
+    0 0 20px rgba(6, 182, 212, 0.3),
+    0 0 30px rgba(6, 182, 212, 0.2),
+    inset 0 0 10px rgba(6, 182, 212, 0.1);
+}
+
+/* ダークテーマ用のオーバーライド */
+.dark-section {
+  --background: #0f172a;
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
 }
