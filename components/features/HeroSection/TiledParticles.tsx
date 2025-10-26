@@ -1,9 +1,93 @@
 'use client';
 
 import { useRef } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { RoundedBox, Environment } from '@react-three/drei';
 import * as THREE from 'three';
+
+/**
+ * 波打つタイル
+ */
+function WavingTile({
+  position,
+  rotation,
+  baseZ,
+  normalizedX,
+  normalizedY,
+  colIndex,
+}: {
+  position: [number, number, number];
+  rotation: [number, number, number];
+  baseZ: number;
+  normalizedX: number;
+  normalizedY: number;
+  colIndex: number;
+}) {
+  const tileRef = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (tileRef.current) {
+      // 波のアニメーション - ゆっくりとした動き
+      const wave1 =
+        Math.sin(state.clock.elapsedTime * 0.8 + normalizedX * 5 + normalizedY * 3) * 0.8;
+      const wave2 =
+        Math.sin(state.clock.elapsedTime * 0.5 + normalizedX * 3 - normalizedY * 4) * 0.5;
+      const combinedWave = wave1 + wave2;
+      tileRef.current.position.z = baseZ + combinedWave;
+
+      // 波に合わせてタイルの角度も変化
+      // 波の勾配を計算して、それに沿ってタイルを傾ける（反転）
+      const waveGradientX =
+        Math.cos(state.clock.elapsedTime * 0.8 + normalizedX * 5 + normalizedY * 3) * 5 * 0.8;
+      const waveGradientY =
+        Math.cos(state.clock.elapsedTime * 0.8 + normalizedX * 5 + normalizedY * 3) * 3 * 0.8;
+
+      // 第2の波の勾配を計算（90度方向の回転用）
+      const wave2GradientX =
+        Math.cos(state.clock.elapsedTime * 0.5 + normalizedX * 3 - normalizedY * 4) * 3 * 0.5;
+      const wave2GradientY =
+        Math.cos(state.clock.elapsedTime * 0.5 + normalizedX * 3 - normalizedY * 4) * -4 * 0.5;
+
+      // 列ごとに符号を反転
+      const colFlip = colIndex % 2 === 0 ? 1 : -1;
+
+      const rotationX = -waveGradientY * 0.02; // 反転
+      const rotationY = -waveGradientX * 0.015; // 反転
+      const rotationZ = -(wave2GradientX + wave2GradientY) * 0.03 * colFlip; // 90度方向の回転（列ごとに反転、角度幅を増加）
+
+      tileRef.current.rotation.x = rotation[0] + rotationX;
+      tileRef.current.rotation.y = rotation[1] + rotationY;
+      tileRef.current.rotation.z = rotation[2] + rotationZ;
+    }
+  });
+
+  return (
+    <group ref={tileRef} position={position} rotation={rotation}>
+      <RoundedBox args={[8, 8, 0.25]} radius={0.4} smoothness={8}>
+        <meshPhysicalMaterial
+          color="#6ab8d8"
+          transparent
+          opacity={0.25}
+          metalness={0.1}
+          roughness={0.05}
+          transmission={0.92}
+          thickness={0.4}
+          clearcoat={1.0}
+          clearcoatRoughness={0.0}
+          envMapIntensity={6.0}
+          ior={1.52}
+          reflectivity={0.98}
+          attenuationColor="#88ccee"
+          attenuationDistance={2.5}
+          iridescence={0.5}
+          iridescenceIOR={1.4}
+          sheen={0.8}
+          sheenColor="#ffffff"
+        />
+      </RoundedBox>
+    </group>
+  );
+}
 
 /**
  * シンプルなタイルグリッド
@@ -26,6 +110,7 @@ function SimpleTileGrid() {
 
       // 弓なりに曲げる - 左右方向（右側を手前に）
       const normalizedX = (col - cols / 2) / (cols / 2); // -1 to 1
+      const normalizedY = (row - rows / 2) / (rows / 2); // -1 to 1
       const curvature = normalizedX * normalizedX * 36; // 曲線をさらに強く（30 → 36）
 
       // タイルの回転を曲線に合わせる
@@ -33,35 +118,15 @@ function SimpleTileGrid() {
       const tileRotationY = -normalizedX * 0.6; // 回転を増加（0.5 → 0.6）
 
       tiles.push(
-        <RoundedBox
+        <WavingTile
           key={`${row}-${col}`}
-          position={[x, y, curvature]}
+          position={[x, y, 0]}
           rotation={[0, tileRotationY, 0]}
-          args={[tileSize, tileSize, tileDepth]}
-          radius={0.4}
-          smoothness={8}
-        >
-          <meshPhysicalMaterial
-            color="#6ab8d8"
-            transparent
-            opacity={0.25}
-            metalness={0.1}
-            roughness={0.05}
-            transmission={0.92}
-            thickness={0.4}
-            clearcoat={1.0}
-            clearcoatRoughness={0.0}
-            envMapIntensity={6.0}
-            ior={1.52}
-            reflectivity={0.98}
-            attenuationColor="#88ccee"
-            attenuationDistance={2.5}
-            iridescence={0.5}
-            iridescenceIOR={1.4}
-            sheen={0.8}
-            sheenColor="#ffffff"
-          />
-        </RoundedBox>
+          baseZ={curvature}
+          normalizedX={normalizedX}
+          normalizedY={normalizedY}
+          colIndex={col}
+        />
       );
     }
   }
