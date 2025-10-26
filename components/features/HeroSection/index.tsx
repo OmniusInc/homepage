@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { VideoFrame } from './VideoFrame';
 import { OIcon } from '@/components/ui/OIcon';
 import { TiledParticles } from './TiledParticles';
@@ -46,10 +47,9 @@ export function HeroSection() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8 flex items-center gap-3"
+          className="mb-8"
         >
-          <OIcon size={50} gradientVariant="primary" />
-          <span className="text-white text-3xl font-bold tracking-tight">mnius</span>
+          <Image src="/images/logo_blackback.png" alt="Omnius" width={180} height={54} priority />
         </motion.div>
 
         <motion.nav
