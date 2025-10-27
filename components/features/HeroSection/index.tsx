@@ -63,22 +63,6 @@ export function HeroSection() {
               />
             </motion.div>
           </div>
-
-          <div className="container mx-auto px-6 lg:px-8 min-h-screen relative z-10 flex items-center pointer-events-none">
-            <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
-              {/* Left - INNOVATE. CREATE. LEAD. */}
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="text-white text-center lg:text-right"
-              >
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
-                  INNOVATE. CREATE. LEAD.
-                </h2>
-              </motion.div>
-            </div>
-          </div>
         </>
       )}
     </section>

@@ -47,6 +47,8 @@ function WavingTile({
   isRectangle = false,
   tileWidth = 10,
   label,
+  catchChar,
+  iconPath,
   onTileClick,
   selectedTile,
 }: {
@@ -60,6 +62,8 @@ function WavingTile({
   isRectangle?: boolean;
   tileWidth?: number;
   label?: string;
+  catchChar?: string;
+  iconPath?: string;
   onTileClick?: (label: string) => void;
   selectedTile?: string | null;
 }) {
@@ -264,6 +268,24 @@ function WavingTile({
             </div>
           </Html>
         )}
+        {catchChar && !selectedTile && (
+          <Html position={[0, 0, 0.2]} center transform occlude={false}>
+            <div
+              className="text-white/95 font-black select-none"
+              style={{
+                textShadow: '0 0 50px rgba(255, 255, 255, 0.7)',
+                fontSize: '8rem',
+              }}
+            >
+              {catchChar}
+            </div>
+          </Html>
+        )}
+        {iconPath && !selectedTile && (
+          <Html position={[0, 0, 0.2]} center transform occlude={false}>
+            <Image src={iconPath} alt="" width={120} height={120} className="flex-shrink-0" />
+          </Html>
+        )}
       </group>
     </AnimatedGroup>
   );
@@ -350,6 +372,67 @@ function SimpleTileGrid({
         label = 'Contact ›';
       }
 
+      // キャッチコピー用の文字を特定のタイルに表示
+      // 右側の上部エリアに配置
+      let catchChar: string | undefined;
+      let iconPath: string | undefined;
+      const catchStartRow = 8; // 上の方（1つ下げる）
+      const catchStartCol = cols - 14; // 右から14列目開始（4つ左に移動）
+
+      // INNOVATE (1行目)
+      const innovateText = 'INNOVATE';
+      if (
+        row === catchStartRow &&
+        col >= catchStartCol &&
+        col < catchStartCol + innovateText.length
+      ) {
+        catchChar = innovateText[col - catchStartCol];
+      }
+
+      // CREATE (2行目)
+      const createText = 'CREATE';
+      if (
+        row === catchStartRow + 1 &&
+        col >= catchStartCol &&
+        col < catchStartCol + createText.length
+      ) {
+        catchChar = createText[col - catchStartCol];
+      }
+
+      // LEAD (3行目)
+      const leadText = 'LEAD';
+      if (
+        row === catchStartRow + 2 &&
+        col >= catchStartCol &&
+        col < catchStartCol + leadText.length
+      ) {
+        catchChar = leadText[col - catchStartCol];
+      }
+
+      // サブテキスト1 - 切り拓く (1列目、左端)
+      const subText1 = '切り拓く';
+      const subCol1 = catchStartCol + innovateText.length + 1; // 1タイル分右に移動
+      const subStartRow1 = catchStartRow + 2; // さらに1マス上から開始
+      if (col === subCol1 && row <= subStartRow1 && row > subStartRow1 - subText1.length) {
+        catchChar = subText1[subStartRow1 - row];
+      }
+
+      // サブテキスト2 - 私たちの未来を (2列目、中央)
+      const subText2 = '私たちの未来を';
+      const subCol2 = subCol1 + 1; // 1マス右側
+      const subStartRow2 = catchStartRow + 2;
+      if (col === subCol2 && row <= subStartRow2 && row > subStartRow2 - subText2.length) {
+        catchChar = subText2[subStartRow2 - row];
+      }
+
+      // サブテキスト3 - 全ての英知で (3列目、右端)
+      const subText3 = '全ての英知で';
+      const subCol3 = subCol2 + 1; // さらに1マス右側
+      const subStartRow3 = catchStartRow + 2;
+      if (col === subCol3 && row <= subStartRow3 && row > subStartRow3 - subText3.length) {
+        catchChar = subText3[subStartRow3 - row];
+      }
+
       tiles.push(
         <WavingTile
           key={`${row}-${col}`}
@@ -363,6 +446,8 @@ function SimpleTileGrid({
           isRectangle={isRectangle}
           tileWidth={tileWidth}
           label={label}
+          catchChar={catchChar}
+          iconPath={iconPath}
           onTileClick={onTileClick}
           selectedTile={selectedTile}
         />
