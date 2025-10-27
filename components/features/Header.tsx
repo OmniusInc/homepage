@@ -17,49 +17,6 @@ export function Header() {
               className="h-10 w-auto"
             />
           </Link>
-
-          {/* ナビゲーション */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="#services"
-              className="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              サービス
-            </Link>
-            <Link
-              href="#works"
-              className="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              実績
-            </Link>
-            <Link
-              href="#company"
-              className="text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              会社情報
-            </Link>
-            <Link
-              href="#contact"
-              className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-[var(--brand-purple)] via-[var(--brand-blue)] to-[var(--brand-green)] rounded-full hover:shadow-lg hover:scale-105 transition-all"
-            >
-              お問い合わせ
-            </Link>
-          </nav>
-
-          {/* モバイルメニューボタン */}
-          <button
-            className="md:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-            aria-label="メニュー"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
         </div>
       </div>
     </header>
