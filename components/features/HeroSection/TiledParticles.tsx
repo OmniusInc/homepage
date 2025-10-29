@@ -8,6 +8,97 @@ import Image from 'next/image';
 import { useSpring, animated, config } from '@react-spring/three';
 
 /**
+ * セクションデータの型定義
+ */
+interface SectionData {
+  title: string;
+  content: React.ReactNode;
+  backgroundColor?: string;
+}
+
+/**
+ * タブタイルのセクション設定
+ */
+interface TabSectionConfig {
+  label: string;
+  sections: SectionData[];
+}
+
+/**
+ * 各タブタイルのセクションデータ
+ */
+const TAB_SECTIONS: TabSectionConfig[] = [
+  {
+    label: 'Solutions ›',
+    sections: [
+      {
+        title: 'Section 1',
+        content: <div className="text-white text-4xl">Solutions - Section 1</div>,
+      },
+      {
+        title: 'Section 2',
+        content: <div className="text-white text-4xl">Solutions - Section 2</div>,
+      },
+      {
+        title: 'Section 3',
+        content: <div className="text-white text-4xl">Solutions - Section 3</div>,
+      },
+    ],
+  },
+  {
+    label: 'About Us ›',
+    sections: [
+      {
+        title: 'Section 1',
+        content: <div className="text-white text-4xl">About Us - Section 1</div>,
+      },
+      {
+        title: 'Section 2',
+        content: <div className="text-white text-4xl">About Us - Section 2</div>,
+      },
+    ],
+  },
+  {
+    label: 'Careers ›',
+    sections: [
+      {
+        title: 'Section 1',
+        content: <div className="text-white text-4xl">Careers - Section 1</div>,
+      },
+      {
+        title: 'Section 2',
+        content: <div className="text-white text-4xl">Careers - Section 2</div>,
+      },
+      {
+        title: 'Section 3',
+        content: <div className="text-white text-4xl">Careers - Section 3</div>,
+      },
+      {
+        title: 'Section 4',
+        content: <div className="text-white text-4xl">Careers - Section 4</div>,
+      },
+    ],
+  },
+  {
+    label: 'Contact ›',
+    sections: [
+      {
+        title: 'Section 1',
+        content: <div className="text-white text-4xl">Contact - Section 1</div>,
+      },
+      {
+        title: 'Section 2',
+        content: <div className="text-white text-4xl">Contact - Section 2</div>,
+      },
+      {
+        title: 'Section 3',
+        content: <div className="text-white text-4xl">Contact - Section 3</div>,
+      },
+    ],
+  },
+];
+
+/**
  * マウス位置を追跡
  */
 function MouseTracker({ onMouseMove }: { onMouseMove: (x: number, y: number) => void }) {
@@ -51,6 +142,10 @@ function WavingTile({
   iconPath,
   onTileClick,
   selectedTile,
+  currentSectionIndex,
+  sectionRotation,
+  isScaleComplete,
+  onScaleComplete,
 }: {
   position: [number, number, number];
   rotation: [number, number, number];
@@ -66,11 +161,16 @@ function WavingTile({
   iconPath?: string;
   onTileClick?: (label: string) => void;
   selectedTile?: string | null;
+  currentSectionIndex?: number;
+  sectionRotation?: number;
+  isScaleComplete?: boolean;
+  onScaleComplete?: () => void;
 }) {
   const tileRef = useRef<THREE.Group>(null);
   const waveRef = useRef<THREE.Group>(null);
   const { camera, viewport } = useThree();
   const isSelected = selectedTile === label;
+  const hoverZRef = useRef(0); // ホバー時のZ位置を滑らかに補間するための ref
 
   // クリック処理
   const handleClick = (e: React.MouseEvent) => {
@@ -83,29 +183,71 @@ function WavingTile({
   // アニメーションスプリング
   // 画面いっぱいに表示: ビューポートサイズに合わせて計算
 
-  // 画面いっぱいに表示するためのスケール計算（0.8倍）
-  const targetScale = 0.8;
+  // 画面いっぱいに表示するためのスケール計算（1倍）
+  const targetScale = 1.0;
 
   // カメラの正面、中央に配置
-  // カメラ位置は[5, 0, 30]なので、カメラの少し手前に配置
-  const targetX = camera.position.x; // カメラのX位置に合わせる
-  const targetY = camera.position.y; // カメラのY位置に合わせる
+  const targetX = 0; // 画面中央（X=0）
+  const targetY = 0; // 画面中央（Y=0）
   const targetZ = camera.position.z - 5; // カメラから距離5の位置
 
+  // 他のタイルが散らばる方向を計算（中心から外側へ）
+  const scatterDirection = {
+    x: position[0], // 元の位置方向
+    y: position[1],
+    z: position[2],
+  };
+  const scatterDistance = 100; // 散らばる距離
+
   const { scale, animPosX, animPosY, animPosZ, rotX, rotY, rotZ, opacity } = useSpring({
-    scale: isSelected ? targetScale : 1,
-    animPosX: isSelected ? targetX : position[0],
-    animPosY: isSelected ? targetY : position[1],
-    animPosZ: isSelected ? targetZ : position[2] + baseZ,
-    // 選択時: 完全に正面を向く（回転を0にリセット）
-    rotX: isSelected ? 0 : rotation[0],
-    rotY: isSelected ? 0 : rotation[1],
-    rotZ: isSelected ? 0 : rotation[2],
+    scale: isSelected ? targetScale : selectedTile && !isSelected ? 0.5 : 1,
+    animPosX: isSelected
+      ? targetX
+      : selectedTile && !isSelected
+        ? scatterDirection.x * 3
+        : position[0],
+    animPosY: isSelected
+      ? targetY
+      : selectedTile && !isSelected
+        ? scatterDirection.y * 3
+        : position[1],
+    animPosZ: isSelected
+      ? targetZ
+      : selectedTile && !isSelected
+        ? scatterDirection.z + scatterDistance
+        : position[2] + baseZ,
+    // 選択時: セクション回転を適用、それ以外は元の回転
+    rotX:
+      isSelected && sectionRotation !== undefined
+        ? sectionRotation
+        : selectedTile && !isSelected
+          ? rotation[0] + normalizedX * 2
+          : rotation[0],
+    rotY: isSelected
+      ? 0
+      : selectedTile && !isSelected
+        ? rotation[1] + normalizedY * 2
+        : rotation[1],
+    rotZ: isSelected
+      ? 0
+      : selectedTile && !isSelected
+        ? rotation[2] + (normalizedX + normalizedY)
+        : rotation[2],
     opacity: isSelected || !selectedTile ? 1 : 0,
-    config: config.slow,
+    config: selectedTile && !isSelected ? { tension: 120, friction: 20 } : config.slow,
+    // セクションインデックスが0の時（タイル選択直後）は即座に回転を0にリセット
+    immediate:
+      isSelected && (sectionRotation === 0 || sectionRotation === undefined)
+        ? (key) => key === 'rotX'
+        : false,
     onChange: (result) => {
-      if (isSelected && label) {
-        console.log(`${label} - rotY:`, result.value.rotY);
+      // スケールアニメーションが完了したら通知
+      if (isSelected && onScaleComplete && !isScaleComplete) {
+        const currentScale = result.value.scale as number;
+        // スケールが目標値（targetScale）に十分近づいたら完了とみなす
+        if (Math.abs(currentScale - targetScale) < 0.01) {
+          onScaleComplete();
+        }
       }
     },
   });
@@ -147,9 +289,11 @@ function WavingTile({
         Math.sin(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) * 0.5;
       const combinedWave = wave1 + wave2;
 
-      // マウスの影響を加える（長方形タイルのホバー時のみ浮き上がる）
-      const mouseWave = isHovered ? 3 : 0;
-      waveRef.current.position.z = combinedWave + mouseWave;
+      // ホバー時のZ位置を滑らかに補間（lerp）
+      const targetHoverZ = isHovered ? 4 : 0;
+      hoverZRef.current += (targetHoverZ - hoverZRef.current) * 0.15; // 0.15 = 滑らかさの係数
+
+      waveRef.current.position.z = combinedWave + hoverZRef.current;
 
       // ホバー中は正面を向く、それ以外は波に合わせて角度変化
       if (isHovered) {
@@ -240,7 +384,8 @@ function WavingTile({
             sheenColor="#ffffff"
           />
         </RoundedBox>
-        {label && (
+        {/* タイルの表面: ラベル（選択されていない時のみ表示） */}
+        {label && !isSelected && (
           <Html
             position={[0, 0, -0.2]}
             center
@@ -248,8 +393,8 @@ function WavingTile({
             occlude={false}
             style={{
               userSelect: 'none',
-              opacity: isSelected || !selectedTile ? 1 : 0,
-              pointerEvents: isSelected || !selectedTile ? 'auto' : 'none',
+              opacity: !selectedTile ? 1 : 0,
+              pointerEvents: !selectedTile ? 'auto' : 'none',
               transition: 'opacity 0.5s ease',
             }}
           >
@@ -265,6 +410,25 @@ function WavingTile({
                 className="flex-shrink-0"
               />
               <span className="text-7xl">{label}</span>
+            </div>
+          </Html>
+        )}
+        {/* セクション内容 */}
+        {label && isSelected && currentSectionIndex !== undefined && (
+          <Html
+            position={[0, 0, 0.2]}
+            center
+            transform
+            occlude={false}
+            style={{
+              userSelect: 'none',
+              // 奇数セクション（1, 3, 5...）の時は180度反転、偶数セクション（0, 2, 4...）はそのまま
+              transform: currentSectionIndex % 2 === 1 ? 'rotateX(180deg)' : 'none',
+            }}
+          >
+            <div className="flex items-center justify-center p-8">
+              {TAB_SECTIONS.find((tab) => tab.label === label)?.sections[currentSectionIndex]
+                ?.content || <div className="text-white text-4xl">No content</div>}
             </div>
           </Html>
         )}
@@ -298,10 +462,18 @@ function SimpleTileGrid({
   mousePosition,
   onTileClick,
   selectedTile,
+  currentSectionIndex,
+  sectionRotation,
+  isScaleComplete,
+  onScaleComplete,
 }: {
   mousePosition: { x: number; y: number };
   onTileClick: (label: string) => void;
   selectedTile: string | null;
+  currentSectionIndex: number;
+  sectionRotation: number;
+  isScaleComplete: boolean;
+  onScaleComplete: () => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -377,7 +549,7 @@ function SimpleTileGrid({
       let catchChar: string | undefined;
       let iconPath: string | undefined;
       const catchStartRow = 8; // 上の方（1つ下げる）
-      const catchStartCol = cols - 14; // 右から14列目開始（4つ左に移動）
+      const catchStartCol = cols - 15; // 右から15列目開始（1タイル分左に移動）
 
       // INNOVATE (1行目)
       const innovateText = 'INNOVATE';
@@ -450,19 +622,27 @@ function SimpleTileGrid({
           iconPath={iconPath}
           onTileClick={onTileClick}
           selectedTile={selectedTile}
+          currentSectionIndex={currentSectionIndex}
+          sectionRotation={sectionRotation}
+          isScaleComplete={isScaleComplete}
+          onScaleComplete={onScaleComplete}
         />
       );
     }
   }
 
-  // グループ全体を斜めに傾ける（左上が手前に来るように）
-  // ただし、タイルが選択されている時は回転を無効化して正面を向かせる
+  // グループ全体の回転（選択時は完全に正面を向く）
   const AnimatedGroup = animated.group;
 
+  // カメラが右にずれているので、タイルグリッドを左に回転させて正面を向かせる
+  // カメラ位置[15, 0, 60]から原点を見る角度を計算
+  // tan(θ) = 15 / 60 = 0.25 → θ ≈ 0.2449 ラジアン（約14度）
+  const baseRotationY = Math.atan2(15, 60); // カメラ位置に基づく正確な角度
+
   const { groupRotX, groupRotY, groupRotZ } = useSpring({
-    groupRotX: 0, // 画面と同じ方向に
-    groupRotY: 0, // 画面と同じ方向に
-    groupRotZ: 0, // 画面と同じ方向に
+    groupRotX: selectedTile ? 0 : 0,
+    groupRotY: selectedTile ? baseRotationY : 0, // 選択時は回転を加えて正面に、通常時は0
+    groupRotZ: selectedTile ? 0 : 0,
     config: config.slow,
   });
 
@@ -486,9 +666,17 @@ function SimpleTileGrid({
 function Scene({
   selectedTile,
   onTileClick,
+  currentSectionIndex,
+  sectionRotation,
+  isScaleComplete,
+  onScaleComplete,
 }: {
   selectedTile: string | null;
   onTileClick: (label: string) => void;
+  currentSectionIndex: number;
+  sectionRotation: number;
+  isScaleComplete: boolean;
+  onScaleComplete: () => void;
 }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -515,6 +703,10 @@ function Scene({
         mousePosition={mousePosition}
         onTileClick={onTileClick}
         selectedTile={selectedTile}
+        currentSectionIndex={currentSectionIndex}
+        sectionRotation={sectionRotation}
+        isScaleComplete={isScaleComplete}
+        onScaleComplete={onScaleComplete}
       />
     </>
   );
@@ -523,23 +715,64 @@ function Scene({
 export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string | null) => void }) {
   // クリック拡大処理
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
+  // セクション管理
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  // スケール完了フラグ
+  const [isScaleComplete, setIsScaleComplete] = useState(false);
 
   const handleTileClick = (label: string) => {
     setSelectedTile(label);
+    setCurrentSectionIndex(0); // タイル選択時は必ずセクション0から
+    setIsScaleComplete(false); // スケール開始時はfalse
     onTileSelect?.(label);
   };
 
   const handleTileClose = () => {
     setSelectedTile(null);
+    setCurrentSectionIndex(0);
+    setIsScaleComplete(false);
     onTileSelect?.(null);
   };
 
+  // 画面クリックでセクションを進める
+  const handleScreenClick = () => {
+    if (!selectedTile) return;
+
+    // スケールが完了していない場合は、スケール完了フラグを立てるだけ
+    if (!isScaleComplete) {
+      setIsScaleComplete(true);
+      return;
+    }
+
+    const currentTab = TAB_SECTIONS.find((tab) => tab.label === selectedTile);
+    if (!currentTab) return;
+
+    const totalSections = currentTab.sections.length;
+    const nextIndex = currentSectionIndex + 1;
+
+    if (nextIndex < totalSections) {
+      setCurrentSectionIndex(nextIndex);
+    } else {
+      // 全セクション終了後は閉じる
+      handleTileClose();
+    }
+  };
+
+  // セクションインデックスに基づいてX軸回転角度を計算
+  // 180度 = Math.PI ラジアン
+  // スケール完了後のみ回転を適用
+  const sectionRotation = isScaleComplete ? currentSectionIndex * Math.PI : 0;
+
   return (
     <>
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 1 }}
+        onClick={selectedTile ? handleScreenClick : undefined}
+      >
         <Canvas
           camera={{
-            position: [0, 0, 60],
+            position: [15, 0, 60],
             fov: 75,
             near: 0.1,
             far: 1000,
@@ -555,7 +788,14 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
             pointerEvents: 'auto',
           }}
         >
-          <Scene selectedTile={selectedTile} onTileClick={handleTileClick} />
+          <Scene
+            selectedTile={selectedTile}
+            onTileClick={handleTileClick}
+            currentSectionIndex={currentSectionIndex}
+            sectionRotation={sectionRotation}
+            isScaleComplete={isScaleComplete}
+            onScaleComplete={() => setIsScaleComplete(true)}
+          />
         </Canvas>
       </div>
 
