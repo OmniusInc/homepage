@@ -137,6 +137,7 @@ function WavingTile({
   mousePosition,
   isRectangle = false,
   tileWidth = 10,
+  tileHeight = 8.5,
   label,
   catchChar,
   iconPath,
@@ -144,8 +145,6 @@ function WavingTile({
   selectedTile,
   currentSectionIndex,
   sectionRotation,
-  isScaleComplete,
-  onScaleComplete,
 }: {
   position: [number, number, number];
   rotation: [number, number, number];
@@ -156,6 +155,7 @@ function WavingTile({
   mousePosition: { x: number; y: number };
   isRectangle?: boolean;
   tileWidth?: number;
+  tileHeight?: number;
   label?: string;
   catchChar?: string;
   iconPath?: string;
@@ -163,8 +163,6 @@ function WavingTile({
   selectedTile?: string | null;
   currentSectionIndex?: number;
   sectionRotation?: number;
-  isScaleComplete?: boolean;
-  onScaleComplete?: () => void;
 }) {
   const tileRef = useRef<THREE.Group>(null);
   const waveRef = useRef<THREE.Group>(null);
@@ -172,9 +170,9 @@ function WavingTile({
   const isSelected = selectedTile === label;
   const hoverZRef = useRef(0); // ホバー時のZ位置を滑らかに補間するための ref
 
-  // クリック処理
+  // クリック処理（選択されていない時のみ）
   const handleClick = (e: React.MouseEvent) => {
-    if (label && onTileClick) {
+    if (label && onTileClick && !isSelected) {
       e.stopPropagation();
       onTileClick(label);
     }
@@ -183,8 +181,12 @@ function WavingTile({
   // アニメーションスプリング
   // 画面いっぱいに表示: ビューポートサイズに合わせて計算
 
-  // 画面いっぱいに表示するためのスケール計算（1倍）
+  // スケール倍率は1倍（タイルサイズ自体を変更する）
   const targetScale = 1.0;
+
+  // スケール時のタイルサイズ（横2つ分）
+  const scaledTileWidth = isSelected ? (tileWidth * 2) / 3 : tileWidth;
+  const scaledTileHeight = isSelected ? tileHeight : tileHeight;
 
   // カメラの正面、中央に配置
   const targetX = 0; // 画面中央（X=0）
@@ -240,16 +242,6 @@ function WavingTile({
       isSelected && (sectionRotation === 0 || sectionRotation === undefined)
         ? (key) => key === 'rotX'
         : false,
-    onChange: (result) => {
-      // スケールアニメーションが完了したら通知
-      if (isSelected && onScaleComplete && !isScaleComplete) {
-        const currentScale = result.value.scale as number;
-        // スケールが目標値（targetScale）に十分近づいたら完了とみなす
-        if (Math.abs(currentScale - targetScale) < 0.01) {
-          onScaleComplete();
-        }
-      }
-    },
   });
 
   useFrame((state) => {
@@ -273,7 +265,7 @@ function WavingTile({
 
       // マウスがタイルの上にあるかをチェック（長方形タイルのみ反応）
       const tileHalfWidth = tileWidth / 2;
-      const tileHalfHeight = 8.5 / 2; // タイルの高さ
+      const tileHalfHeight = tileHeight / 2;
       const isHovered =
         isRectangle && Math.abs(dx) < tileHalfWidth && Math.abs(dy) < tileHalfHeight;
 
@@ -356,12 +348,12 @@ function WavingTile({
       {/* 波アニメーション用のグループ（useFrameで操作） */}
       <group ref={waveRef}>
         <RoundedBox
-          args={[tileWidth, 8.5, 0.255]}
+          args={[scaledTileWidth, scaledTileHeight, 0.255]}
           radius={0.425}
           smoothness={8}
-          onClick={handleClick}
-          onPointerOver={() => label && (document.body.style.cursor = 'pointer')}
-          onPointerOut={() => (document.body.style.cursor = 'default')}
+          onClick={isSelected ? undefined : handleClick}
+          onPointerOver={() => label && !isSelected && (document.body.style.cursor = 'pointer')}
+          onPointerOut={() => !isSelected && (document.body.style.cursor = 'default')}
         >
           <animated.meshPhysicalMaterial
             color="#6ab8d8"
@@ -464,16 +456,12 @@ function SimpleTileGrid({
   selectedTile,
   currentSectionIndex,
   sectionRotation,
-  isScaleComplete,
-  onScaleComplete,
 }: {
   mousePosition: { x: number; y: number };
   onTileClick: (label: string) => void;
   selectedTile: string | null;
   currentSectionIndex: number;
   sectionRotation: number;
-  isScaleComplete: boolean;
-  onScaleComplete: () => void;
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
@@ -486,19 +474,26 @@ function SimpleTileGrid({
 
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      // 中央付近のタイル4つを長方形にする（2つ繋げた形）- 左に2タイル分ずらし、下に2タイル分移動
+      // 中央付近のタイル4つを縦に並べる（各横3つ分）
       const centerRow = Math.floor(rows / 2);
       const centerCol = Math.floor(cols / 2);
-      const isCenterTile = row === centerRow - 2 && col === centerCol - 2;
-      const isBelowCenterTile = row === centerRow - 3 && col === centerCol - 2; // 下の長方形
-      const isLeftTopTile = row === centerRow - 2 && col === centerCol - 4; // 左上の長方形
-      const isLeftBottomTile = row === centerRow - 3 && col === centerCol - 4; // 左下の長方形
 
+      // 各タブタイルの左上の位置（上から下へ、左に4つ、下に2つ移動）
+      const isTopTile = row === centerRow - 1 && col === centerCol - 6; // 一番上
+      const isSecondTile = row === centerRow - 2 && col === centerCol - 6; // 2番目
+      const isThirdTile = row === centerRow - 3 && col === centerCol - 6; // 3番目
+      const isBottomTile = row === centerRow - 4 && col === centerCol - 6; // 一番下
+
+      // スキップするタイル：各大きなタイルの右2列をスキップ
       const isSkippedTile =
-        (row === centerRow - 2 && col === centerCol - 1) || // 中央の右隣をスキップ
-        (row === centerRow - 3 && col === centerCol - 1) || // 下の右隣をスキップ
-        (row === centerRow - 2 && col === centerCol - 3) || // 左上の右隣をスキップ
-        (row === centerRow - 3 && col === centerCol - 3); // 左下の右隣をスキップ
+        // 一番上タイルの右2列
+        (row === centerRow - 1 && (col === centerCol - 5 || col === centerCol - 4)) ||
+        // 2番目タイルの右2列
+        (row === centerRow - 2 && (col === centerCol - 5 || col === centerCol - 4)) ||
+        // 3番目タイルの右2列
+        (row === centerRow - 3 && (col === centerCol - 5 || col === centerCol - 4)) ||
+        // 一番下タイルの右2列
+        (row === centerRow - 4 && (col === centerCol - 5 || col === centerCol - 4));
 
       // スキップするタイルは生成しない
       if (isSkippedTile) {
@@ -517,11 +512,14 @@ function SimpleTileGrid({
       // Y軸周りの回転 - 曲線の接線方向に沿うように（逆方向）
       const tileRotationY = -normalizedX * 0.6; // 回転を増加（0.5 → 0.6）
 
-      const isRectangle = isCenterTile || isBelowCenterTile || isLeftTopTile || isLeftBottomTile;
-      const tileWidth = isRectangle ? tileSize * 2 + (spacing - tileSize) : tileSize;
+      const isRectangle = isTopTile || isSecondTile || isThirdTile || isBottomTile;
+      // 横3つ分のタイル：幅 = 3タイル分、高さ = 1タイル分
+      const tileWidth = isRectangle ? tileSize * 3 + (spacing - tileSize) * 2 : tileSize;
+      const tileHeight = isRectangle ? tileSize : tileSize;
 
-      // 長方形タイルの位置を調整（右隣のタイルの分だけ右にシフト）
-      const adjustedX = isRectangle ? x + spacing / 2 : x;
+      // 大きなタイルの位置を調整（中心が左上の位置になるように右にシフト）
+      const adjustedX = isRectangle ? x + spacing : x;
+      const adjustedY = isRectangle ? y : y;
 
       // 長方形タイルの場合、実際の位置を基準にnormalizedXを再計算
       const adjustedNormalizedX = isRectangle ? adjustedX / ((cols / 2) * spacing) : normalizedX;
@@ -532,15 +530,15 @@ function SimpleTileGrid({
         : curvature;
       const adjustedTileRotationY = isRectangle ? -adjustedNormalizedX * 0.6 : tileRotationY;
 
-      // 各長方形タイルのラベルを定義
+      // 各長方形タイルのラベルを定義（上から下へ）
       let label: string | undefined;
-      if (isLeftTopTile) {
+      if (isTopTile) {
         label = 'Solutions ›';
-      } else if (isLeftBottomTile) {
+      } else if (isSecondTile) {
         label = 'About Us ›';
-      } else if (isCenterTile) {
+      } else if (isThirdTile) {
         label = 'Careers ›';
-      } else if (isBelowCenterTile) {
+      } else if (isBottomTile) {
         label = 'Contact ›';
       }
 
@@ -608,7 +606,7 @@ function SimpleTileGrid({
       tiles.push(
         <WavingTile
           key={`${row}-${col}`}
-          position={[adjustedX, y, 0]}
+          position={[adjustedX, adjustedY, 0]}
           rotation={[0, adjustedTileRotationY, 0]}
           baseZ={adjustedCurvature}
           normalizedX={adjustedNormalizedX}
@@ -617,6 +615,7 @@ function SimpleTileGrid({
           mousePosition={mousePosition}
           isRectangle={isRectangle}
           tileWidth={tileWidth}
+          tileHeight={tileHeight}
           label={label}
           catchChar={catchChar}
           iconPath={iconPath}
@@ -624,8 +623,6 @@ function SimpleTileGrid({
           selectedTile={selectedTile}
           currentSectionIndex={currentSectionIndex}
           sectionRotation={sectionRotation}
-          isScaleComplete={isScaleComplete}
-          onScaleComplete={onScaleComplete}
         />
       );
     }
@@ -668,15 +665,11 @@ function Scene({
   onTileClick,
   currentSectionIndex,
   sectionRotation,
-  isScaleComplete,
-  onScaleComplete,
 }: {
   selectedTile: string | null;
   onTileClick: (label: string) => void;
   currentSectionIndex: number;
   sectionRotation: number;
-  isScaleComplete: boolean;
-  onScaleComplete: () => void;
 }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -705,8 +698,6 @@ function Scene({
         selectedTile={selectedTile}
         currentSectionIndex={currentSectionIndex}
         sectionRotation={sectionRotation}
-        isScaleComplete={isScaleComplete}
-        onScaleComplete={onScaleComplete}
       />
     </>
   );
@@ -717,20 +708,24 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   // セクション管理
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  // スケール完了フラグ
-  const [isScaleComplete, setIsScaleComplete] = useState(false);
+  // タイル選択直後のフラグ（クリックイベント重複防止）
+  const justSelectedRef = useRef(false);
 
   const handleTileClick = (label: string) => {
     setSelectedTile(label);
     setCurrentSectionIndex(0); // タイル選択時は必ずセクション0から
-    setIsScaleComplete(false); // スケール開始時はfalse
+    justSelectedRef.current = true; // 直後フラグを立てる
     onTileSelect?.(label);
+
+    // 少し遅延してフラグをリセット
+    setTimeout(() => {
+      justSelectedRef.current = false;
+    }, 100);
   };
 
   const handleTileClose = () => {
     setSelectedTile(null);
     setCurrentSectionIndex(0);
-    setIsScaleComplete(false);
     onTileSelect?.(null);
   };
 
@@ -738,11 +733,8 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
   const handleScreenClick = () => {
     if (!selectedTile) return;
 
-    // スケールが完了していない場合は、スケール完了フラグを立てるだけ
-    if (!isScaleComplete) {
-      setIsScaleComplete(true);
-      return;
-    }
+    // タイル選択直後は無視（クリックイベント重複防止）
+    if (justSelectedRef.current) return;
 
     const currentTab = TAB_SECTIONS.find((tab) => tab.label === selectedTile);
     if (!currentTab) return;
@@ -751,6 +743,7 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
     const nextIndex = currentSectionIndex + 1;
 
     if (nextIndex < totalSections) {
+      // 次のセクションに進む
       setCurrentSectionIndex(nextIndex);
     } else {
       // 全セクション終了後は閉じる
@@ -760,8 +753,7 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
 
   // セクションインデックスに基づいてX軸回転角度を計算
   // 180度 = Math.PI ラジアン
-  // スケール完了後のみ回転を適用
-  const sectionRotation = isScaleComplete ? currentSectionIndex * Math.PI : 0;
+  const sectionRotation = currentSectionIndex * Math.PI;
 
   return (
     <>
@@ -793,8 +785,6 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
             onTileClick={handleTileClick}
             currentSectionIndex={currentSectionIndex}
             sectionRotation={sectionRotation}
-            isScaleComplete={isScaleComplete}
-            onScaleComplete={() => setIsScaleComplete(true)}
           />
         </Canvas>
       </div>
