@@ -29,32 +29,341 @@ interface TabSectionConfig {
  */
 const TAB_SECTIONS: TabSectionConfig[] = [
   {
-    label: 'Solutions ›',
+    label: 'About Us ›',
     sections: [
       {
-        title: 'Section 1',
-        content: <div className="text-white text-4xl">Solutions - Section 1</div>,
+        title: '会社概要・ビジョン',
+        content: (
+          <div className="w-full h-full flex">
+            {/* 左側：ビジョン */}
+            <div className="w-1/2 h-full flex flex-col justify-center px-16 bg-gradient-to-br from-blue-950/40 to-transparent">
+              <h2 className="text-7xl font-black mb-8 leading-tight">
+                <span className="block text-white">全ての英知で、</span>
+                <span className="block bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+                  私たちの未来を
+                </span>
+                <span className="block text-white">切り拓く</span>
+              </h2>
+              <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
+                Omnius株式会社は、AI技術を活用した教育とDX支援を通じて、
+                個人と企業の可能性を最大化します。
+              </p>
+            </div>
+
+            {/* 右側：ミッション・バリュー */}
+            <div className="w-1/2 h-full flex flex-col justify-center px-16">
+              <div className="space-y-12 max-w-xl">
+                <div>
+                  <div className="text-sm uppercase tracking-widest text-blue-400 mb-3">
+                    Mission
+                  </div>
+                  <p className="text-2xl text-white leading-relaxed">
+                    最先端のAI技術と深い業界知見を融合させ、
+                    実践的な教育プログラムとコンサルティングサービスを提供
+                  </p>
+                </div>
+                <div>
+                  <div className="text-sm uppercase tracking-widest text-cyan-400 mb-3">Value</div>
+                  <p className="text-2xl text-white leading-relaxed">
+                    テクノロジーの力で新しい学びと働き方を創造し、
+                    持続可能な成長を実現するパートナー
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ),
       },
       {
-        title: 'Section 2',
-        content: <div className="text-white text-4xl">Solutions - Section 2</div>,
-      },
-      {
-        title: 'Section 3',
-        content: <div className="text-white text-4xl">Solutions - Section 3</div>,
+        title: '事業内容',
+        content: (
+          <div className="w-full h-full flex flex-col p-16">
+            {/* ヘッダー */}
+            <div className="mb-16">
+              <h2 className="text-6xl font-black text-white mb-4">Our Business</h2>
+              <p className="text-xl text-gray-400">3つの事業で、変革を支援する</p>
+            </div>
+
+            {/* グリッドレイアウト */}
+            <div className="grid grid-cols-3 gap-8 flex-1">
+              {/* AIアカデミア */}
+              <div className="group relative overflow-hidden bg-gradient-to-br from-blue-500/20 to-blue-900/10 backdrop-blur-sm border border-blue-500/30 hover:border-blue-400 transition-all duration-500 p-10 flex flex-col">
+                <div className="text-8xl font-black text-blue-500/20 mb-4">01</div>
+                <h3 className="text-3xl font-bold text-white mb-6">AI Academia</h3>
+                <p className="text-lg text-gray-300 leading-relaxed flex-1">
+                  実務で使えるAI技術を体系的に学べる教育プログラム。
+                  現場で即戦力となる人材を育成します。
+                </p>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
+              </div>
+
+              {/* DXコンサルティング */}
+              <div className="group relative overflow-hidden bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 backdrop-blur-sm border border-cyan-500/30 hover:border-cyan-400 transition-all duration-500 p-10 flex flex-col">
+                <div className="text-8xl font-black text-cyan-500/20 mb-4">02</div>
+                <h3 className="text-3xl font-bold text-white mb-6">DX Consulting</h3>
+                <p className="text-lg text-gray-300 leading-relaxed flex-1">
+                  企業のデジタル変革を戦略から実行まで一貫してサポート。
+                  AI・データ活用による新たな価値創造を実現します。
+                </p>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-transparent"></div>
+              </div>
+
+              {/* システム開発 */}
+              <div className="group relative overflow-hidden bg-gradient-to-br from-blue-500/20 to-blue-900/10 backdrop-blur-sm border border-blue-500/30 hover:border-blue-400 transition-all duration-500 p-10 flex flex-col">
+                <div className="text-8xl font-black text-blue-500/20 mb-4">03</div>
+                <h3 className="text-3xl font-bold text-white mb-6">System Development</h3>
+                <p className="text-lg text-gray-300 leading-relaxed flex-1">
+                  最新技術を活用した高品質なシステム開発。
+                  Salesforceを含む幅広いプラットフォームに対応します。
+                </p>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+        ),
       },
     ],
   },
   {
-    label: 'About Us ›',
+    label: 'Members ›',
     sections: [
       {
-        title: 'Section 1',
-        content: <div className="text-white text-4xl">About Us - Section 1</div>,
+        title: '役員一覧',
+        content: (
+          <div className="w-full h-full flex flex-col p-12">
+            {/* ヘッダー */}
+            <div className="mb-6">
+              <h2 className="text-5xl font-black text-white mb-3">Leadership Team</h2>
+              <p className="text-lg text-gray-400">経営チーム & 求める人物像</p>
+            </div>
+
+            {/* 2x2 グリッド: Leadership Team */}
+            <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1">
+              {/* 吉川綜一 */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">吉川綜一</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  社長。Omniusの創業者として、ビジョン策定と組織全体の戦略を統括。
+                  [プロフィール準備中]
+                </p>
+                <div className="absolute top-8 right-8 text-9xl font-black text-blue-500/10">Y</div>
+              </div>
+
+              {/* 宮嶋大輔 */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 flex hover:border-cyan-400 transition-all duration-500">
+                <div className="w-1/3 h-full relative overflow-hidden border-r border-cyan-400/40">
+                  <Image
+                    src="/images/Member_Daisuke_M.png"
+                    alt="宮嶋大輔"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1 p-8 flex flex-col justify-center">
+                  <h3 className="text-3xl font-black text-white mb-2">宮嶋大輔</h3>
+                  <p className="text-lg text-cyan-300 mb-4">CEO</p>
+                  <p className="text-base text-gray-300 leading-relaxed">
+                    データサイエンスとAI技術のスペシャリスト。 MUFG優勝、デロイト金賞受賞。
+                  </p>
+                </div>
+                <div className="absolute top-8 right-8 text-9xl font-black text-cyan-500/10">M</div>
+              </div>
+
+              {/* 田中丈士 */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 flex hover:border-cyan-400 transition-all duration-500">
+                <div className="w-1/3 h-full relative overflow-hidden border-r border-cyan-400/40">
+                  <Image
+                    src="/images/Member_Hiroshi_T.png"
+                    alt="田中丈士"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1 p-8 flex flex-col justify-center">
+                  <h3 className="text-3xl font-black text-white mb-2">田中丈士</h3>
+                  <p className="text-lg text-cyan-300 mb-4">副社長</p>
+                  <p className="text-base text-gray-300 leading-relaxed">
+                    WEB開発とSalesforce開発のスペシャリスト。 技術戦略の立案と実行を担当。
+                  </p>
+                </div>
+                <div className="absolute top-8 right-8 text-9xl font-black text-cyan-500/10">T</div>
+              </div>
+
+              {/* 宮崎悠 */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">宮崎悠</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  取締役。組織運営と事業開発を統括。 [プロフィール準備中]
+                </p>
+                <div className="absolute top-8 right-8 text-9xl font-black text-blue-500/10">M</div>
+              </div>
+            </div>
+          </div>
+        ),
       },
       {
-        title: 'Section 2',
-        content: <div className="text-white text-4xl">About Us - Section 2</div>,
+        title: '宮嶋大輔',
+        content: (
+          <div className="w-full h-full flex px-8">
+            {/* 左側：プロフィール */}
+            <div className="w-2/5 h-full flex flex-col py-8 bg-gradient-to-br from-cyan-950/40 to-transparent">
+              <div className="px-8 mb-4 flex justify-center">
+                <div className="w-11/12 aspect-square relative overflow-hidden border-4 border-cyan-400/30">
+                  <Image
+                    src="/images/Member_Daisuke_M.png"
+                    alt="宮嶋大輔"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+              <div className="px-8 text-center">
+                <h2 className="text-4xl font-black text-white mb-2">宮嶋大輔</h2>
+                <p className="text-xl text-cyan-300 font-bold mb-3">CEO</p>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  データサイエンスとAI技術を駆使し、ビジネス課題を解決するスペシャリスト。
+                </p>
+              </div>
+            </div>
+
+            {/* 右側：実績・専門分野 */}
+            <div className="w-3/5 h-full flex flex-col justify-center px-12 py-8">
+              <div className="space-y-10">
+                {/* 実績 */}
+                <div>
+                  <h3 className="text-sm uppercase tracking-widest text-cyan-400 mb-4">
+                    Achievements
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex gap-4 items-start">
+                      <span className="text-5xl font-black text-cyan-500/30">01</span>
+                      <div>
+                        <p className="text-xl text-white font-bold">
+                          MUFG Data Science Championship 2023
+                        </p>
+                        <p className="text-lg text-gray-400">優勝</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-4 items-start">
+                      <span className="text-5xl font-black text-cyan-500/30">02</span>
+                      <div>
+                        <p className="text-xl text-white font-bold">
+                          Deloitte Analytics Competition
+                        </p>
+                        <p className="text-lg text-gray-400">金賞受賞</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-4 items-start">
+                      <span className="text-5xl font-black text-cyan-500/30">03</span>
+                      <div>
+                        <p className="text-xl text-white font-bold">AI導入プロジェクト</p>
+                        <p className="text-lg text-gray-400">大手企業向け多数</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* 専門分野 */}
+                <div className="border-t border-cyan-500/30 pt-8">
+                  <h3 className="text-sm uppercase tracking-widest text-cyan-400 mb-4">
+                    Expertise
+                  </h3>
+                  <p className="text-xl text-gray-300">
+                    機械学習、深層学習、データ分析、ビジネス戦略
+                  </p>
+                </div>
+
+                {/* メッセージ */}
+                <div className="bg-gradient-to-r from-cyan-500/10 to-transparent p-8 border-l-4 border-cyan-400">
+                  <p className="text-2xl italic text-cyan-100 leading-relaxed">
+                    「AIの民主化を通じて、誰もがデータドリブンな意思決定ができる社会を実現する」
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ),
+      },
+      {
+        title: '田中丈士',
+        content: (
+          <div className="w-full h-full flex px-8">
+            {/* 左側：プロフィール */}
+            <div className="w-2/5 h-full flex flex-col py-8 bg-gradient-to-br from-blue-950/40 to-transparent">
+              <div className="px-8 mb-4 flex justify-center">
+                <div className="w-11/12 aspect-square relative overflow-hidden border-4 border-blue-400/30">
+                  <Image
+                    src="/images/Member_Hiroshi_T.png"
+                    alt="田中丈士"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+              <div className="px-8 text-center">
+                <h2 className="text-4xl font-black text-white mb-2">田中丈士</h2>
+                <p className="text-xl text-blue-300 font-bold mb-3">副社長</p>
+                <p className="text-sm text-gray-300 leading-relaxed">
+                  WEB開発からエンタープライズシステムまで幅広い技術領域をカバーするフルスタックエンジニア。
+                </p>
+              </div>
+            </div>
+
+            {/* 右側：実績・専門分野 */}
+            <div className="w-3/5 h-full flex flex-col justify-center px-12 py-8">
+              <div className="space-y-10">
+                {/* 実績 */}
+                <div>
+                  <h3 className="text-sm uppercase tracking-widest text-blue-400 mb-4">
+                    Achievements
+                  </h3>
+                  <ul className="space-y-4">
+                    <li className="flex gap-4 items-start">
+                      <span className="text-5xl font-black text-blue-500/30">01</span>
+                      <div>
+                        <p className="text-xl text-white font-bold">Salesforce実装プロジェクト</p>
+                        <p className="text-lg text-gray-400">PM経験多数</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-4 items-start">
+                      <span className="text-5xl font-black text-blue-500/30">02</span>
+                      <div>
+                        <p className="text-xl text-white font-bold">
+                          大規模WEBアプリケーション開発
+                        </p>
+                        <p className="text-lg text-gray-400">リード</p>
+                      </div>
+                    </li>
+                    <li className="flex gap-4 items-start">
+                      <span className="text-5xl font-black text-blue-500/30">03</span>
+                      <div>
+                        <p className="text-xl text-white font-bold">DX推進コンサルティング</p>
+                        <p className="text-lg text-gray-400">戦略から実装まで</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* 専門分野 */}
+                <div className="border-t border-blue-500/30 pt-8">
+                  <h3 className="text-sm uppercase tracking-widest text-blue-400 mb-4">
+                    Expertise
+                  </h3>
+                  <p className="text-xl text-gray-300">
+                    WEB開発（Next.js, React）、Salesforce、プロジェクトマネジメント
+                  </p>
+                </div>
+
+                {/* メッセージ */}
+                <div className="bg-gradient-to-r from-blue-500/10 to-transparent p-8 border-l-4 border-blue-400">
+                  <p className="text-2xl italic text-blue-100 leading-relaxed">
+                    「技術で事業を加速させ、使う人すべてに価値を届けるシステムを創る」
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ),
       },
     ],
   },
@@ -62,20 +371,253 @@ const TAB_SECTIONS: TabSectionConfig[] = [
     label: 'Careers ›',
     sections: [
       {
-        title: 'Section 1',
-        content: <div className="text-white text-4xl">Careers - Section 1</div>,
+        title: '募集職種',
+        content: (
+          <div className="w-full h-full flex flex-col p-16">
+            {/* ヘッダー */}
+            <div className="mb-16">
+              <h2 className="text-6xl font-black text-white mb-4">Join Us</h2>
+              <p className="text-xl text-gray-400">共に未来を創る仲間を募集</p>
+            </div>
+
+            {/* グリッド */}
+            <div className="grid grid-cols-3 gap-8 flex-1">
+              {/* AIエンジニア */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/30 to-blue-900/20 backdrop-blur-sm border border-blue-500/40 p-10 flex flex-col group hover:border-blue-400 transition-all duration-500">
+                <div className="text-8xl font-black text-blue-500/20 mb-6">AI</div>
+                <h3 className="text-3xl font-bold text-white mb-4">AI Engineer</h3>
+                <p className="text-lg text-gray-400 mb-2">データサイエンティスト</p>
+                <p className="text-base text-gray-300 leading-relaxed flex-1">
+                  機械学習モデルの開発から実装、データ分析基盤の構築まで。
+                  最先端のAI技術で社会課題を解決するポジション。
+                </p>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
+              </div>
+
+              {/* システムエンジニア */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/30 to-cyan-900/20 backdrop-blur-sm border border-cyan-500/40 p-10 flex flex-col group hover:border-cyan-400 transition-all duration-500">
+                <div className="text-8xl font-black text-cyan-500/20 mb-6">SE</div>
+                <h3 className="text-3xl font-bold text-white mb-4">System Engineer</h3>
+                <p className="text-lg text-gray-400 mb-2">フルスタック開発者</p>
+                <p className="text-base text-gray-300 leading-relaxed flex-1">
+                  WEB開発、Salesforce開発、インフラ構築など。
+                  幅広い技術領域でクライアントの課題解決を支援。
+                </p>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-transparent"></div>
+              </div>
+
+              {/* ビジネス職 */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/30 to-blue-900/20 backdrop-blur-sm border border-blue-500/40 p-10 flex flex-col group hover:border-blue-400 transition-all duration-500">
+                <div className="text-8xl font-black text-blue-500/20 mb-6">BZ</div>
+                <h3 className="text-3xl font-bold text-white mb-4">Business</h3>
+                <p className="text-lg text-gray-400 mb-2">事業成長のドライバー</p>
+                <p className="text-base text-gray-300 leading-relaxed flex-1">
+                  営業、マーケティング、事業企画、講師など。
+                  事業成長とクライアント価値創出をリード。
+                </p>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+        ),
       },
       {
-        title: 'Section 2',
-        content: <div className="text-white text-4xl">Careers - Section 2</div>,
+        title: '求める人物像',
+        content: (
+          <div className="w-full h-full flex flex-col p-12">
+            {/* ヘッダー */}
+            <div className="mb-8">
+              <h2 className="text-5xl font-black text-white mb-3">Who We Want</h2>
+              <p className="text-lg text-gray-400">こんな方を歓迎します</p>
+            </div>
+
+            {/* 2x2 グリッド */}
+            <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1">
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">旺盛な好奇心</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  新しい技術やビジネス領域に興味を持ち、自ら学び続ける姿勢。
+                  変化を楽しみ、チャレンジを恐れない方。
+                </p>
+                <div className="absolute top-8 right-8 text-9xl font-black text-blue-500/10">C</div>
+              </div>
+
+              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 p-8 flex flex-col hover:border-cyan-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">成長志向</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  失敗を恐れず、経験から学び、スキルを磨き続ける。
+                  自己成長とチーム成長の両立を目指す方。
+                </p>
+                <div className="absolute top-8 right-8 text-9xl font-black text-cyan-500/10">G</div>
+              </div>
+
+              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 p-8 flex flex-col hover:border-cyan-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">課題解決力</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  本質的な課題を見抜き、創造的な解決策を提案・実行できる。
+                  論理的思考と実行力を兼ね備えた方。
+                </p>
+                <div className="absolute top-8 right-8 text-9xl font-black text-cyan-500/10">P</div>
+              </div>
+
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">チームワーク</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  多様な専門性を持つメンバーと協働し、 互いの強みを活かして価値を創出できる方。
+                </p>
+                <div className="absolute top-8 right-8 text-9xl font-black text-blue-500/10">T</div>
+              </div>
+            </div>
+          </div>
+        ),
       },
       {
-        title: 'Section 3',
-        content: <div className="text-white text-4xl">Careers - Section 3</div>,
+        title: '働く環境',
+        content: (
+          <div className="w-full h-full flex flex-col p-12">
+            {/* ヘッダー */}
+            <div className="mb-8">
+              <h2 className="text-5xl font-black text-white mb-3">Work Environment</h2>
+              <p className="text-lg text-gray-400">成長を加速する環境</p>
+            </div>
+
+            {/* 2x2 グリッド */}
+            <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1">
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">フラットな組織文化</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  役職や年次に関係なく、アイデアや意見を自由に発信できる環境。
+                </p>
+                <div className="absolute bottom-8 right-8 text-9xl font-black text-blue-500/10">
+                  F
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 p-8 flex flex-col hover:border-cyan-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">最先端技術への挑戦</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  AI、機械学習、クラウド技術など、常に最新の技術にアクセス。
+                </p>
+                <div className="absolute bottom-8 right-8 text-9xl font-black text-cyan-500/10">
+                  T
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 p-8 flex flex-col hover:border-cyan-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">柔軟な働き方</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  リモートワーク可、フレックス制度など、個々のライフスタイルに合わせた働き方。
+                </p>
+                <div className="absolute bottom-8 right-8 text-9xl font-black text-cyan-500/10">
+                  W
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+                <h3 className="text-3xl font-black text-white mb-4">充実した研修制度</h3>
+                <p className="text-lg text-gray-300 leading-relaxed">
+                  社内勉強会、外部セミナー参加支援、資格取得支援など。
+                </p>
+                <div className="absolute bottom-8 right-8 text-9xl font-black text-blue-500/10">
+                  E
+                </div>
+              </div>
+            </div>
+          </div>
+        ),
       },
       {
-        title: 'Section 4',
-        content: <div className="text-white text-4xl">Careers - Section 4</div>,
+        title: '応募について',
+        content: (
+          <div className="w-full h-full flex">
+            {/* 左側：選考フロー */}
+            <div className="w-1/2 h-full flex flex-col justify-center px-16 bg-gradient-to-br from-blue-950/40 to-transparent">
+              <h2 className="text-6xl font-black text-white mb-12">Application</h2>
+
+              <div className="space-y-8">
+                <h3 className="text-sm uppercase tracking-widest text-blue-400 mb-6">
+                  Selection Process
+                </h3>
+                <div className="space-y-6">
+                  <div className="flex gap-6 items-center">
+                    <span className="text-6xl font-black text-blue-500/30">01</span>
+                    <div>
+                      <p className="text-2xl text-white font-bold">書類選考</p>
+                      <p className="text-lg text-gray-400">履歴書・職務経歴書</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6 items-center">
+                    <span className="text-6xl font-black text-cyan-500/30">02</span>
+                    <div>
+                      <p className="text-2xl text-white font-bold">一次面接</p>
+                      <p className="text-lg text-gray-400">人事・現場メンバー</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6 items-center">
+                    <span className="text-6xl font-black text-blue-500/30">03</span>
+                    <div>
+                      <p className="text-2xl text-white font-bold">二次面接</p>
+                      <p className="text-lg text-gray-400">役員</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6 items-center">
+                    <span className="text-6xl font-black text-cyan-500/30">04</span>
+                    <div>
+                      <p className="text-2xl text-white font-bold">オファー面談</p>
+                      <p className="text-lg text-gray-400">条件すり合わせ</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-500 mt-8">
+                  ※職種やご経験により変更になる場合があります
+                </p>
+              </div>
+            </div>
+
+            {/* 右側：待遇・福利厚生 */}
+            <div className="w-1/2 h-full flex flex-col justify-center px-16">
+              <div className="space-y-12">
+                <div>
+                  <h3 className="text-sm uppercase tracking-widest text-cyan-400 mb-6">Benefits</h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-4">
+                      <span className="text-3xl text-cyan-400">✓</span>
+                      <div>
+                        <p className="text-xl text-white">給与</p>
+                        <p className="text-lg text-gray-400">経験・スキルに応じて決定（要相談）</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-3xl text-cyan-400">✓</span>
+                      <p className="text-xl text-white">社会保険完備</p>
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-3xl text-cyan-400">✓</span>
+                      <p className="text-xl text-white">交通費全額支給</p>
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-3xl text-cyan-400">✓</span>
+                      <p className="text-xl text-white">リモートワーク可</p>
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-3xl text-cyan-400">✓</span>
+                      <p className="text-xl text-white">書籍購入補助、セミナー参加費補助</p>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 p-8 border-l-4 border-cyan-400">
+                  <p className="text-2xl font-bold mb-3 text-cyan-100">
+                    まずはお気軽にお問い合わせください
+                  </p>
+                  <p className="text-lg text-gray-200">
+                    カジュアル面談も実施しています。詳細は Contact からお問い合わせください。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ),
       },
     ],
   },
@@ -169,6 +711,10 @@ function WavingTile({
   const { camera, viewport } = useThree();
   const isSelected = selectedTile === label;
   const hoverZRef = useRef(0); // ホバー時のZ位置を滑らかに補間するための ref
+
+  // タブタイルまたは文字タイルの場合は90%、それ以外は通常の透明度
+  const isSpecialTile = Boolean(label || catchChar);
+  const tileOpacity = isSpecialTile ? 0.9 : 1.0;
 
   // クリック処理（選択されていない時のみ）
   const handleClick = (e: React.MouseEvent) => {
@@ -358,7 +904,7 @@ function WavingTile({
           <animated.meshPhysicalMaterial
             color="#6ab8d8"
             transparent
-            opacity={opacity}
+            opacity={typeof opacity === 'number' ? opacity * tileOpacity : tileOpacity}
             metalness={0.1}
             roughness={0.05}
             transmission={0.92}
@@ -405,25 +951,7 @@ function WavingTile({
             </div>
           </Html>
         )}
-        {/* セクション内容 */}
-        {label && isSelected && currentSectionIndex !== undefined && (
-          <Html
-            position={[0, 0, 0.2]}
-            center
-            transform
-            occlude={false}
-            style={{
-              userSelect: 'none',
-              // 奇数セクション（1, 3, 5...）の時は180度反転、偶数セクション（0, 2, 4...）はそのまま
-              transform: currentSectionIndex % 2 === 1 ? 'rotateX(180deg)' : 'none',
-            }}
-          >
-            <div className="flex items-center justify-center p-8">
-              {TAB_SECTIONS.find((tab) => tab.label === label)?.sections[currentSectionIndex]
-                ?.content || <div className="text-white text-4xl">No content</div>}
-            </div>
-          </Html>
-        )}
+        {/* セクション内容は3D空間外のDOMで表示するため、ここでは表示しない */}
         {catchChar && !selectedTile && (
           <Html position={[0, 0, 0.2]} center transform occlude={false}>
             <div
@@ -533,9 +1061,9 @@ function SimpleTileGrid({
       // 各長方形タイルのラベルを定義（上から下へ）
       let label: string | undefined;
       if (isTopTile) {
-        label = 'Solutions ›';
-      } else if (isSecondTile) {
         label = 'About Us ›';
+      } else if (isSecondTile) {
+        label = 'Members ›';
       } else if (isThirdTile) {
         label = 'Careers ›';
       } else if (isBottomTile) {
@@ -708,14 +1236,25 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   // セクション管理
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+  // 回転角度を独立管理（アニメーション用）
+  const [rotationDegrees, setRotationDegrees] = useState(0);
   // タイル選択直後のフラグ（クリックイベント重複防止）
   const justSelectedRef = useRef(false);
+  // コンテンツ表示フラグ（スケールアニメーション完了後に表示）
+  const [showContent, setShowContent] = useState(false);
 
   const handleTileClick = (label: string) => {
     setSelectedTile(label);
     setCurrentSectionIndex(0); // タイル選択時は必ずセクション0から
+    setRotationDegrees(0); // 回転角度もリセット
+    setShowContent(false); // コンテンツは非表示
     justSelectedRef.current = true; // 直後フラグを立てる
     onTileSelect?.(label);
+
+    // スケールアニメーション完了後にコンテンツを表示（600ms後）
+    setTimeout(() => {
+      setShowContent(true);
+    }, 600);
 
     // 少し遅延してフラグをリセット
     setTimeout(() => {
@@ -726,6 +1265,8 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
   const handleTileClose = () => {
     setSelectedTile(null);
     setCurrentSectionIndex(0);
+    setRotationDegrees(0);
+    setShowContent(false); // コンテンツも非表示に
     onTileSelect?.(null);
   };
 
@@ -743,17 +1284,24 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
     const nextIndex = currentSectionIndex + 1;
 
     if (nextIndex < totalSections) {
-      // 次のセクションに進む
-      setCurrentSectionIndex(nextIndex);
+      // まず回転アニメーションを開始
+      const nextRotation = rotationDegrees + 180;
+      setRotationDegrees(nextRotation);
+
+      // 回転アニメーションの半分（300ms）が経過してからセクションを更新
+      // これにより、タイルが裏側に回ってから新しいコンテンツが表示される
+      setTimeout(() => {
+        setCurrentSectionIndex(nextIndex);
+      }, 300);
     } else {
       // 全セクション終了後は閉じる
       handleTileClose();
     }
   };
 
-  // セクションインデックスに基づいてX軸回転角度を計算
-  // 180度 = Math.PI ラジアン
-  const sectionRotation = currentSectionIndex * Math.PI;
+  // 回転角度をラジアンに変換（3Dタイル用）
+  // 度数をラジアンに変換: degrees * (Math.PI / 180)
+  const sectionRotation = rotationDegrees * (Math.PI / 180);
 
   return (
     <>
@@ -788,6 +1336,93 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
           />
         </Canvas>
       </div>
+
+      {/* コンテンツオーバーレイ（Canvas外のDOM要素として表示） */}
+      {selectedTile && showContent && (
+        <div
+          className="fixed flex items-center justify-center pointer-events-none"
+          style={{
+            zIndex: 10,
+            left: '5vw',
+            right: '5vw',
+            top: '18vh',
+            bottom: '18vh',
+          }}
+          onClick={handleScreenClick}
+        >
+          <div
+            className="pointer-events-auto"
+            style={{
+              transformStyle: 'preserve-3d',
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+            }}
+            onClick={handleScreenClick}
+          >
+            {/* 表面（偶数セクション用） */}
+            <div
+              style={{
+                position: 'absolute',
+                backfaceVisibility: 'hidden',
+                transform: `rotateX(${rotationDegrees}deg)`,
+                transition: 'transform 0.6s ease',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onClick={handleScreenClick}
+            >
+              {currentSectionIndex % 2 === 0 && (
+                <div
+                  onClick={handleScreenClick}
+                  style={{
+                    cursor: 'pointer',
+                    animation: 'fadeIn 0.6s ease forwards',
+                  }}
+                >
+                  {TAB_SECTIONS.find((tab) => tab.label === selectedTile)?.sections[
+                    currentSectionIndex
+                  ]?.content || <div className="text-white text-4xl">No content</div>}
+                </div>
+              )}
+            </div>
+            {/* 裏面（奇数セクション用） */}
+            <div
+              style={{
+                position: 'absolute',
+                backfaceVisibility: 'hidden',
+                transform: `rotateX(${rotationDegrees + 180}deg)`,
+                transition: 'transform 0.6s ease',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onClick={handleScreenClick}
+            >
+              {currentSectionIndex % 2 === 1 && (
+                <div
+                  onClick={handleScreenClick}
+                  style={{
+                    cursor: 'pointer',
+                    animation: 'fadeIn 0.6s ease forwards',
+                  }}
+                >
+                  {TAB_SECTIONS.find((tab) => tab.label === selectedTile)?.sections[
+                    currentSectionIndex
+                  ]?.content || <div className="text-white text-4xl">No content</div>}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 拡大表示時の閉じるボタンのみ（背景フィルターなし） */}
       {selectedTile && (
