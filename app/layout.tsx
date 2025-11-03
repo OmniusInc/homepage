@@ -15,7 +15,9 @@ const geistMono = Geist_Mono({
 const notoSansJP = Noto_Sans_JP({
   variable: '--font-noto-sans-jp',
   subsets: ['latin'],
-  weight: ['400', '700', '900'],
+  weight: ['400', '500', '600', '700', '900'],
+  display: 'swap',
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -30,7 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} antialiased`}
+      >
         {children}
       </body>
     </html>

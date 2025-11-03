@@ -64,15 +64,45 @@
   --color-brand-green: var(--brand-green);
 }
 
+html,
 body {
-  background: var(--background);
+  background: #000000;
   color: var(--text-primary);
   font-family:
     var(--font-noto-sans-jp),
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',
-    'Yu Gothic', YuGothic, Meiryo, sans-serif;
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Hiragino Sans',
+    'Hiragino Kaku Gothic ProN',
+    'Yu Gothic',
+    YuGothic,
+    Meiryo,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+  overscroll-behavior: none;
+}
+
+/* 3D空間内のテキストレンダリング最適化 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 3D変換時のテキスト品質向上 */
+[style*='transform'] {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
 }
 
 /* スムーススクロール */
@@ -90,6 +120,16 @@ html {
   50% {
     opacity: 0.8;
     filter: blur(60px);
+  }
+}
+
+/* フェードインアニメーション */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
