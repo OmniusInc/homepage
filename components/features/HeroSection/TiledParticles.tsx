@@ -880,7 +880,6 @@ function WavingTile({
   const AnimatedGroup = animated.group;
 
   return (
-    // @ts-expect-error - AnimatedGroup requires animated props
     <AnimatedGroup
       ref={tileRef}
       position-x={animPosX}
