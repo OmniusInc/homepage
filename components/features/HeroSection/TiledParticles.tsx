@@ -1171,7 +1171,6 @@ function SimpleTileGrid({
   });
 
   return (
-    // @ts-expect-error - AnimatedGroup requires animated props
     <AnimatedGroup
       ref={groupRef}
       position={[0, 0, 0]}
