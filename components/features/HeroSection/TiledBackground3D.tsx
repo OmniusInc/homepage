@@ -32,9 +32,9 @@ function TileParticle({ position, rotation }: TileParticleProps) {
           metalness={0.5}
           roughness={0.2}
           transparent
-          opacity={0.6}
+          opacity={0.8}
           emissive="#1e7fb8"
-          emissiveIntensity={0.3}
+          emissiveIntensity={0.5}
           side={THREE.DoubleSide}
         />
       </mesh>
@@ -42,7 +42,7 @@ function TileParticle({ position, rotation }: TileParticleProps) {
       {/* Glowing cyan edges */}
       <lineSegments>
         <edgesGeometry args={[geometry]} />
-        <lineBasicMaterial color="#00d9ff" linewidth={2} transparent opacity={0.8} />
+        <lineBasicMaterial color="#00d9ff" linewidth={2} transparent opacity={1.0} />
       </lineSegments>
     </group>
   );
@@ -109,11 +109,11 @@ function Lights() {
 
 export function TiledBackground3D() {
   return (
-    <div className="absolute inset-0 -z-10">
+    <div className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
       <Canvas
-        camera={{ position: [0, 0, 10], fov: 75 }}
+        camera={{ position: [0, 50, 20], fov: 20 }}
         gl={{ alpha: true, antialias: true }}
-        style={{ background: 'transparent' }}
+        style={{ background: 'transparent', width: '100%', height: '100%' }}
       >
         <Lights />
         <TiledGrid />

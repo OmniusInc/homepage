@@ -1,20 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { TiledParticles } from './TiledParticles';
+import { TiledParticles, TAB_SECTIONS } from './TiledParticles';
+import { MobileView } from './MobileView';
 
 export function HeroSection() {
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // モバイルの場合はMobileViewを表示
+  if (isMobile) {
+    // TAB_SECTIONSをMobileViewの形式に変換
+    const tabGroups = TAB_SECTIONS.map((tab) => ({
+      tabLabel: tab.label,
+      sections: tab.sections.map((section) => ({
+        title: section.title,
+        content: section.content as JSX.Element,
+      })),
+    }));
+
+    return <MobileView tabGroups={tabGroups} />;
+  }
 
   return (
     <section className="relative min-h-screen bg-black">
       {/* タイル状パーティクル */}
       <TiledParticles onTileSelect={setSelectedTile} />
 
-      {/* 他の要素 - selectedTileがある時は非表示 */}
-      {!selectedTile && (
+      {/* 他の要素 - selectedTileがある時 または モバイルの時は非表示 */}
+      {!selectedTile && !isMobile && (
         <>
           {/* Cyan light beam effect - sharper and brighter */}
           <div className="absolute top-0 right-1/4 w-0.5 h-full bg-gradient-to-b from-transparent via-cyan-400/70 to-transparent -z-10 rotate-[28deg]" />

@@ -6,6 +6,7 @@ import { RoundedBox, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import Image from 'next/image';
 import { useSpring, animated, config } from '@react-spring/three';
+import { ContactFormContent } from '@/components/features/ContactForm';
 
 /**
  * セクションデータの型定義
@@ -27,50 +28,82 @@ interface TabSectionConfig {
 /**
  * 各タブタイルのセクションデータ
  */
-const TAB_SECTIONS: TabSectionConfig[] = [
+export const TAB_SECTIONS: TabSectionConfig[] = [
   {
     label: 'About Us ›',
     sections: [
       {
-        title: '会社概要・ビジョン',
+        title: 'ビジョン',
         content: (
-          <div className="w-full h-full flex">
-            {/* 左側：ビジョン */}
-            <div className="w-1/2 h-full flex flex-col justify-center px-16 bg-gradient-to-br from-blue-950/40 to-transparent">
-              <h2 className="text-7xl font-black mb-8 leading-tight">
-                <span className="block text-white">全ての英知で、</span>
-                <span className="block bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-                  私たちの未来を
-                </span>
-                <span className="block text-white">切り拓く</span>
-              </h2>
-              <p className="text-xl text-gray-300 leading-relaxed max-w-xl">
-                Omnius株式会社は、AI技術を活用した教育とDX支援を通じて、
-                個人と企業の可能性を最大化します。
-              </p>
+          <div className="w-full h-full flex flex-col justify-center items-center px-16 py-12">
+            {/* 上部: ロゴ */}
+            <div className="mb-12">
+              <Image
+                src="/images/logo_blackback.png"
+                alt="Omnius"
+                width={600}
+                height={180}
+                className="company-logo"
+              />
             </div>
 
-            {/* 右側：ミッション・バリュー */}
-            <div className="w-1/2 h-full flex flex-col justify-center px-16">
-              <div className="space-y-12 max-w-xl">
-                <div>
-                  <div className="text-sm uppercase tracking-widest text-blue-400 mb-3">
-                    Mission
-                  </div>
-                  <p className="text-2xl text-white leading-relaxed">
-                    最先端のAI技術と深い業界知見を融合させ、
-                    実践的な教育プログラムとコンサルティングサービスを提供
-                  </p>
-                </div>
-                <div>
-                  <div className="text-sm uppercase tracking-widest text-cyan-400 mb-3">Value</div>
-                  <p className="text-2xl text-white leading-relaxed">
-                    テクノロジーの力で新しい学びと働き方を創造し、
-                    持続可能な成長を実現するパートナー
-                  </p>
-                </div>
-              </div>
+            {/* 中央: キャッチフレーズ */}
+            <h2 className="text-7xl font-black mb-10 leading-tight text-center">
+              <span className="block text-white">全ての英知で</span>
+              <span className="block bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+                私たちの未来を切り拓く
+              </span>
+            </h2>
+
+            {/* 下部: サポートテキスト */}
+            <p className="text-2xl text-gray-300 leading-relaxed text-center">
+              AI技術を活用した教育とDX支援を通じて<br/>
+              個人と企業の可能性を最大化します。
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'ミッション',
+        content: (
+          <div className="w-full h-full flex flex-col justify-center px-16 py-12">
+            {/* ラベル */}
+            <div className="text-2xl lg:text-4xl uppercase tracking-widest text-blue-400 mb-8">
+              Mission
             </div>
+
+            {/* メイン文章 */}
+            <h2 className="text-4xl lg:text-7xl font-black text-white leading-tight mb-10">
+              AI教育とDX支援で<br/>可能性を最大化
+            </h2>
+
+            {/* サポート文 */}
+            <p className="text-xl lg:text-3xl text-gray-300 leading-relaxed max-w-4xl">
+              最先端のAI技術と深い業界知見を融合させ、<br/>
+              実践的な教育プログラムとコンサルティングサービスを提供
+            </p>
+          </div>
+        ),
+      },
+      {
+        title: 'ビジョン',
+        content: (
+          <div className="w-full h-full flex flex-col justify-center px-16 py-12">
+            {/* ラベル */}
+            <div className="text-2xl lg:text-4xl uppercase tracking-widest text-cyan-400 mb-8">
+              Vision
+            </div>
+
+            {/* メイン文章 */}
+            <h2 className="text-4xl lg:text-7xl font-black text-white leading-tight mb-10">
+              共に成長する<br/>信頼されるパートナー
+            </h2>
+
+            {/* サポート文 */}
+            <p className="text-xl lg:text-3xl text-gray-300 leading-relaxed max-w-4xl">
+              テクノロジーの力で新しい学びと働き方を創造し、<br/>
+              持続可能な成長を実現するパートナー
+            </p>
           </div>
         ),
       },
@@ -85,10 +118,10 @@ const TAB_SECTIONS: TabSectionConfig[] = [
             </div>
 
             {/* グリッドレイアウト */}
-            <div className="grid grid-cols-3 gap-8 flex-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
               {/* AIアカデミア */}
               <div className="group relative overflow-hidden bg-gradient-to-br from-blue-500/20 to-blue-900/10 backdrop-blur-sm border border-blue-500/30 hover:border-blue-400 transition-all duration-500 p-10 flex flex-col">
-                <div className="text-8xl font-black text-blue-500/20 mb-4">01</div>
+                <div className="text-8xl font-black text-blue-500/50 mb-4">01</div>
                 <h3 className="text-3xl font-bold text-white mb-6">AI Academia</h3>
                 <p className="text-lg text-gray-300 leading-relaxed flex-1">
                   実務で使えるAI技術を体系的に学べる教育プログラム。
@@ -99,7 +132,7 @@ const TAB_SECTIONS: TabSectionConfig[] = [
 
               {/* DXコンサルティング */}
               <div className="group relative overflow-hidden bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 backdrop-blur-sm border border-cyan-500/30 hover:border-cyan-400 transition-all duration-500 p-10 flex flex-col">
-                <div className="text-8xl font-black text-cyan-500/20 mb-4">02</div>
+                <div className="text-8xl font-black text-cyan-500/50 mb-4">02</div>
                 <h3 className="text-3xl font-bold text-white mb-6">DX Consulting</h3>
                 <p className="text-lg text-gray-300 leading-relaxed flex-1">
                   企業のデジタル変革を戦略から実行まで一貫してサポート。
@@ -110,7 +143,7 @@ const TAB_SECTIONS: TabSectionConfig[] = [
 
               {/* システム開発 */}
               <div className="group relative overflow-hidden bg-gradient-to-br from-blue-500/20 to-blue-900/10 backdrop-blur-sm border border-blue-500/30 hover:border-blue-400 transition-all duration-500 p-10 flex flex-col">
-                <div className="text-8xl font-black text-blue-500/20 mb-4">03</div>
+                <div className="text-8xl font-black text-blue-500/50 mb-4">03</div>
                 <h3 className="text-3xl font-bold text-white mb-6">System Development</h3>
                 <p className="text-lg text-gray-300 leading-relaxed flex-1">
                   最新技術を活用した高品質なシステム開発。
@@ -130,17 +163,20 @@ const TAB_SECTIONS: TabSectionConfig[] = [
       {
         title: '役員一覧',
         content: (
-          <div className="w-full h-full flex flex-col p-12">
+          <div className="w-full h-full flex flex-col">
             {/* ヘッダー */}
-            <div className="mb-6">
+            <div className="mb-6 pt-12">
               <h2 className="text-5xl font-black text-white mb-3">Leadership Team</h2>
               <p className="text-lg text-gray-400">経営チーム & 求める人物像</p>
             </div>
 
             {/* 2x2 グリッド: Leadership Team */}
-            <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1">
+            <div className="leadership-grid grid grid-cols-2 grid-rows-2 gap-6 flex-1 pb-12">
               {/* 吉川綜一 */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+              <div
+                className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500"
+                data-member-name="吉川綜一"
+              >
                 <h3 className="text-3xl font-black text-white mb-4">吉川綜一</h3>
                 <p className="text-lg text-gray-300 leading-relaxed">
                   社長。Omniusの創業者として、ビジョン策定と組織全体の戦略を統括。
@@ -150,7 +186,10 @@ const TAB_SECTIONS: TabSectionConfig[] = [
               </div>
 
               {/* 宮嶋大輔 */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 flex hover:border-cyan-400 transition-all duration-500">
+              <div
+                className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 flex hover:border-cyan-400 transition-all duration-500"
+                data-member-name="宮嶋大輔"
+              >
                 <div className="w-1/3 h-full relative overflow-hidden border-r border-cyan-400/40">
                   <Image
                     src="/images/Member_Daisuke_M.png"
@@ -170,7 +209,10 @@ const TAB_SECTIONS: TabSectionConfig[] = [
               </div>
 
               {/* 田中丈士 */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 flex hover:border-cyan-400 transition-all duration-500">
+              <div
+                className="relative overflow-hidden bg-gradient-to-br from-cyan-600/25 to-cyan-900/15 backdrop-blur-sm border border-cyan-500/30 flex hover:border-cyan-400 transition-all duration-500"
+                data-member-name="田中丈士"
+              >
                 <div className="w-1/3 h-full relative overflow-hidden border-r border-cyan-400/40">
                   <Image
                     src="/images/Member_Hiroshi_T.png"
@@ -190,7 +232,10 @@ const TAB_SECTIONS: TabSectionConfig[] = [
               </div>
 
               {/* 宮崎悠 */}
-              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+              <div
+                className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500"
+                data-member-name="宮崎悠"
+              >
                 <h3 className="text-3xl font-black text-white mb-4">宮崎悠</h3>
                 <p className="text-lg text-gray-300 leading-relaxed">
                   取締役。組織運営と事業開発を統括。 [プロフィール準備中]
@@ -381,10 +426,10 @@ const TAB_SECTIONS: TabSectionConfig[] = [
             </div>
 
             {/* グリッド */}
-            <div className="grid grid-cols-3 gap-8 flex-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
               {/* AIエンジニア */}
               <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/30 to-blue-900/20 backdrop-blur-sm border border-blue-500/40 p-10 flex flex-col group hover:border-blue-400 transition-all duration-500">
-                <div className="text-8xl font-black text-blue-500/20 mb-6">AI</div>
+                <div className="text-8xl font-black text-blue-500/50 mb-6">AI</div>
                 <h3 className="text-3xl font-bold text-white mb-4">AI Engineer</h3>
                 <p className="text-lg text-gray-400 mb-2">データサイエンティスト</p>
                 <p className="text-base text-gray-300 leading-relaxed flex-1">
@@ -396,7 +441,7 @@ const TAB_SECTIONS: TabSectionConfig[] = [
 
               {/* システムエンジニア */}
               <div className="relative overflow-hidden bg-gradient-to-br from-cyan-600/30 to-cyan-900/20 backdrop-blur-sm border border-cyan-500/40 p-10 flex flex-col group hover:border-cyan-400 transition-all duration-500">
-                <div className="text-8xl font-black text-cyan-500/20 mb-6">SE</div>
+                <div className="text-8xl font-black text-cyan-500/50 mb-6">SE</div>
                 <h3 className="text-3xl font-bold text-white mb-4">System Engineer</h3>
                 <p className="text-lg text-gray-400 mb-2">フルスタック開発者</p>
                 <p className="text-base text-gray-300 leading-relaxed flex-1">
@@ -408,7 +453,7 @@ const TAB_SECTIONS: TabSectionConfig[] = [
 
               {/* ビジネス職 */}
               <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/30 to-blue-900/20 backdrop-blur-sm border border-blue-500/40 p-10 flex flex-col group hover:border-blue-400 transition-all duration-500">
-                <div className="text-8xl font-black text-blue-500/20 mb-6">BZ</div>
+                <div className="text-8xl font-black text-blue-500/50 mb-6">Biz</div>
                 <h3 className="text-3xl font-bold text-white mb-4">Business</h3>
                 <p className="text-lg text-gray-400 mb-2">事業成長のドライバー</p>
                 <p className="text-base text-gray-300 leading-relaxed flex-1">
@@ -424,15 +469,15 @@ const TAB_SECTIONS: TabSectionConfig[] = [
       {
         title: '求める人物像',
         content: (
-          <div className="w-full h-full flex flex-col p-12">
+          <div className="w-full h-full flex flex-col p-16">
             {/* ヘッダー */}
-            <div className="mb-8">
-              <h2 className="text-5xl font-black text-white mb-3">Who We Want</h2>
-              <p className="text-lg text-gray-400">こんな方を歓迎します</p>
+            <div className="mb-16">
+              <h2 className="text-6xl font-black text-white mb-4">Who We Want</h2>
+              <p className="text-xl text-gray-400">こんな方を歓迎します</p>
             </div>
 
             {/* 2x2 グリッド */}
-            <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
               <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
                 <h3 className="text-3xl font-black text-white mb-4">旺盛な好奇心</h3>
                 <p className="text-lg text-gray-300 leading-relaxed">
@@ -474,15 +519,15 @@ const TAB_SECTIONS: TabSectionConfig[] = [
       {
         title: '働く環境',
         content: (
-          <div className="w-full h-full flex flex-col p-12">
+          <div className="w-full h-full flex flex-col p-16">
             {/* ヘッダー */}
-            <div className="mb-8">
-              <h2 className="text-5xl font-black text-white mb-3">Work Environment</h2>
-              <p className="text-lg text-gray-400">成長を加速する環境</p>
+            <div className="mb-16">
+              <h2 className="text-6xl font-black text-white mb-4">Work Environment</h2>
+              <p className="text-xl text-gray-400">成長を加速する環境</p>
             </div>
 
             {/* 2x2 グリッド */}
-            <div className="grid grid-cols-2 grid-rows-2 gap-6 flex-1">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
               <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
                 <h3 className="text-3xl font-black text-white mb-4">フラットな組織文化</h3>
                 <p className="text-lg text-gray-300 leading-relaxed">
@@ -513,7 +558,7 @@ const TAB_SECTIONS: TabSectionConfig[] = [
                 </div>
               </div>
 
-              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-blue-400 transition-all duration-500">
+              <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-cyan-400 transition-all duration-500">
                 <h3 className="text-3xl font-black text-white mb-4">充実した研修制度</h3>
                 <p className="text-lg text-gray-300 leading-relaxed">
                   社内勉強会、外部セミナー参加支援、資格取得支援など。
@@ -529,10 +574,11 @@ const TAB_SECTIONS: TabSectionConfig[] = [
       {
         title: '応募について',
         content: (
-          <div className="w-full h-full flex">
+          <div className="w-full h-full flex flex-col lg:flex-row p-16">
             {/* 左側：選考フロー */}
-            <div className="w-1/2 h-full flex flex-col justify-center px-16 bg-gradient-to-br from-blue-950/40 to-transparent">
-              <h2 className="text-6xl font-black text-white mb-12">Application</h2>
+            <div className="w-full lg:w-1/2 mb-16 lg:mb-0 lg:pr-8">
+              <h2 className="text-6xl font-black text-white mb-4 pb-8">Application</h2>
+            <div/>
 
               <div className="space-y-8">
                 <h3 className="text-sm uppercase tracking-widest text-blue-400 mb-6">
@@ -540,42 +586,42 @@ const TAB_SECTIONS: TabSectionConfig[] = [
                 </h3>
                 <div className="space-y-6">
                   <div className="flex gap-6 items-center">
-                    <span className="text-6xl font-black text-blue-500/30">01</span>
+                    <span className="text-6xl font-black text-blue-500/50">01</span>
                     <div>
-                      <p className="text-2xl text-white font-bold">書類選考</p>
-                      <p className="text-lg text-gray-400">履歴書・職務経歴書</p>
+                      <p className="text-2xl text-white font-bold">個別面談</p>
+                      <p className="text-lg text-gray-400">希望・スキルのヒアリング</p>
                     </div>
                   </div>
                   <div className="flex gap-6 items-center">
-                    <span className="text-6xl font-black text-cyan-500/30">02</span>
+                    <span className="text-6xl font-black text-cyan-500/50">02</span>
                     <div>
-                      <p className="text-2xl text-white font-bold">一次面接</p>
-                      <p className="text-lg text-gray-400">人事・現場メンバー</p>
+                      <p className="text-2xl text-white font-bold">集団説明会</p>
+                      <p className="text-lg text-gray-400">事業内容・働き方の紹介</p>
                     </div>
                   </div>
                   <div className="flex gap-6 items-center">
-                    <span className="text-6xl font-black text-blue-500/30">03</span>
+                    <span className="text-6xl font-black text-blue-500/50">03</span>
                     <div>
-                      <p className="text-2xl text-white font-bold">二次面接</p>
-                      <p className="text-lg text-gray-400">役員</p>
+                      <p className="text-2xl text-white font-bold">研修</p>
+                      <p className="text-lg text-gray-400">必要スキルの習得</p>
                     </div>
                   </div>
                   <div className="flex gap-6 items-center">
-                    <span className="text-6xl font-black text-cyan-500/30">04</span>
+                    <span className="text-6xl font-black text-cyan-500/50">04</span>
                     <div>
-                      <p className="text-2xl text-white font-bold">オファー面談</p>
-                      <p className="text-lg text-gray-400">条件すり合わせ</p>
+                      <p className="text-2xl text-white font-bold">配属</p>
+                      <p className="text-lg text-gray-400">プロジェクトへの参加</p>
                     </div>
                   </div>
                 </div>
-                <p className="text-sm text-gray-500 mt-8">
-                  ※職種やご経験により変更になる場合があります
+                <p className="text-[10px] text-gray-400 mt-8 lg:text-sm">
+                  ※状況により変更になる場合があります
                 </p>
               </div>
             </div>
 
             {/* 右側：待遇・福利厚生 */}
-            <div className="w-1/2 h-full flex flex-col justify-center px-16">
+            <div className="w-full lg:w-1/2 flex flex-col justify-center lg:pl-8">
               <div className="space-y-12">
                 <div>
                   <h3 className="text-sm uppercase tracking-widest text-cyan-400 mb-6">Benefits</h3>
@@ -583,25 +629,21 @@ const TAB_SECTIONS: TabSectionConfig[] = [
                     <li className="flex items-start gap-4">
                       <span className="text-3xl text-cyan-400">✓</span>
                       <div>
-                        <p className="text-xl text-white">給与</p>
-                        <p className="text-lg text-gray-400">経験・スキルに応じて決定（要相談）</p>
+                        <p className="text-xl text-white">報酬</p>
+                        <p className="text-lg text-gray-400">成果・スキルに応じて決定（要相談）</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-4">
                       <span className="text-3xl text-cyan-400">✓</span>
-                      <p className="text-xl text-white">社会保険完備</p>
+                      <p className="text-xl text-white">AIを用いた実践的な自動化経験</p>
                     </li>
                     <li className="flex items-start gap-4">
                       <span className="text-3xl text-cyan-400">✓</span>
-                      <p className="text-xl text-white">交通費全額支給</p>
+                      <p className="text-xl text-white">システム開発経験</p>
                     </li>
                     <li className="flex items-start gap-4">
                       <span className="text-3xl text-cyan-400">✓</span>
                       <p className="text-xl text-white">リモートワーク可</p>
-                    </li>
-                    <li className="flex items-start gap-4">
-                      <span className="text-3xl text-cyan-400">✓</span>
-                      <p className="text-xl text-white">書籍購入補助、セミナー参加費補助</p>
                     </li>
                   </ul>
                 </div>
@@ -610,9 +652,19 @@ const TAB_SECTIONS: TabSectionConfig[] = [
                   <p className="text-2xl font-bold mb-3 text-cyan-100">
                     まずはお気軽にお問い合わせください
                   </p>
-                  <p className="text-lg text-gray-200">
+                  <p className="text-lg text-gray-200 mb-6">
                     カジュアル面談も実施しています。詳細は Contact からお問い合わせください。
                   </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // カスタムイベントを発火してContactタイルを選択
+                      window.dispatchEvent(new CustomEvent('selectContactTile'));
+                    }}
+                    className="bg-gradient-to-r from-blue-600/75 to-cyan-500/75 text-white font-bold py-3 px-6 rounded-lg hover:from-blue-600/90 hover:to-cyan-500/90 transition-all shadow-lg shadow-cyan-500/30 backdrop-blur-sm border border-cyan-500/30"
+                  >
+                    お問い合わせフォームへ
+                  </button>
                 </div>
               </div>
             </div>
@@ -625,16 +677,33 @@ const TAB_SECTIONS: TabSectionConfig[] = [
     label: 'Contact ›',
     sections: [
       {
-        title: 'Section 1',
-        content: <div className="text-white text-4xl">Contact - Section 1</div>,
-      },
-      {
-        title: 'Section 2',
-        content: <div className="text-white text-4xl">Contact - Section 2</div>,
-      },
-      {
-        title: 'Section 3',
-        content: <div className="text-white text-4xl">Contact - Section 3</div>,
+        title: 'お問い合わせ',
+        content: (
+          <div className="w-full h-full flex p-16">
+            {/* 左側：お問い合わせ情報 */}
+            <div className="w-1/3 h-full flex flex-col justify-start pr-12 pt-16">
+              <h2 className="text-6xl font-black text-white mb-4">Contact</h2>
+              <p className="text-3xl font-bold text-cyan-400 mb-8">お問い合わせ</p>
+              <p className="text-xl text-gray-300 leading-relaxed mb-8">
+                サービスに関するご相談、お見積もり、採用・インターンシップのお問い合わせなど、
+                お気軽にご連絡ください。
+              </p>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm uppercase tracking-widest text-cyan-400 mb-3">
+                    Response Time
+                  </h3>
+                  <p className="text-lg text-gray-300">通常2営業日以内にご返信いたします</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 右側：お問い合わせフォーム（中央と右ブロック連結） */}
+            <div className="w-2/3 h-full flex flex-col justify-start pl-12 pt-16">
+              <ContactFormContent />
+            </div>
+          </div>
+        ),
       },
     ],
   },
@@ -1267,6 +1336,18 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
     setShowContent(false); // コンテンツも非表示に
     onTileSelect?.(null);
   };
+
+  // カスタムイベントをリッスンしてContactタイルを選択
+  useEffect(() => {
+    const handleSelectContact = () => {
+      handleTileClick('Contact ›');
+    };
+
+    window.addEventListener('selectContactTile', handleSelectContact);
+    return () => {
+      window.removeEventListener('selectContactTile', handleSelectContact);
+    };
+  }, []);
 
   // 画面クリックでセクションを進める
   const handleScreenClick = () => {
