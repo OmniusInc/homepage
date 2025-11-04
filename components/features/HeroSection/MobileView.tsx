@@ -158,6 +158,17 @@ export function MobileView({ tabGroups }: MobileViewProps) {
             <div className="min-h-[calc(100vh-65px)] flex flex-col justify-center items-center px-8 py-12 relative">
               {/* コンテンツ */}
               <div className="relative z-10 flex flex-col items-center">
+                {/* 会社ロゴ */}
+                <div className="mb-12">
+                  <Image
+                    src="/images/logo_blackback.png"
+                    alt="Omnius"
+                    width={240}
+                    height={72}
+                    priority
+                  />
+                </div>
+
                 <h1 className="text-4xl font-black text-center mb-16 leading-tight">
                   <span className="block bg-gradient-to-t from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                     全ての英知で
@@ -176,18 +187,11 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                   <span className="text-lg text-cyan-400 font-bold">先導する</span>
                 </div>
 
-                <p className="text-base text-gray-300 leading-relaxed text-center max-w-md mb-20">
+                <p className="text-base text-gray-300 leading-relaxed text-center max-w-md">
                   AI技術を活用した教育とDX支援を通じて
                   <br />
                   個人と企業の可能性を最大化します。
                 </p>
-
-                <button
-                  onClick={() => setIsMenuOpen(true)}
-                  className="px-8 py-4 bg-gradient-to-r from-blue-600/75 to-cyan-500/75 text-white font-bold rounded-lg hover:from-blue-600/90 hover:to-cyan-500/90 transition-all shadow-lg shadow-cyan-500/30 backdrop-blur-sm border border-cyan-500/30"
-                >
-                  詳しく見る
-                </button>
               </div>
             </div>
 
@@ -235,7 +239,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                     <br />
                     実践的な教育プログラムと
                     <br />
-                    コンサルティングサービスを提供
+                    コンサルティングサービスを提供します。
                   </p>
                 </div>
               </div>
@@ -256,7 +260,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                     <br />
                     新しい価値を創造することで、
                     <br />
-                    業界をリードしていきます
+                    業界をリードしていきます。
                   </p>
                 </div>
               </div>
