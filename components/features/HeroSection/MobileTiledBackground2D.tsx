@@ -18,6 +18,7 @@ export default function MobileTiledBackground2D() {
   const particlesRef = useRef<Particle[]>([]);
   const animationFrameRef = useRef<number>();
   const timeRef = useRef(0);
+  const lastWidthRef = useRef<number>(0); // 前回の幅を記録
   const lastHeightRef = useRef<number>(0); // 前回の高さを記録
   const resizeTimeoutRef = useRef<NodeJS.Timeout>(); // デバウンス用タイマー
 
@@ -30,19 +31,23 @@ export default function MobileTiledBackground2D() {
 
     // キャンバスサイズの設定
     const resizeCanvas = () => {
+      const currentWidth = window.innerWidth;
       const currentHeight = window.innerHeight;
+      const widthDiff = Math.abs(currentWidth - lastWidthRef.current);
       const heightDiff = Math.abs(currentHeight - lastHeightRef.current);
 
-      // 初回レンダリング、または高さの変化が100px以上の場合のみリサイズ
-      // UIバーの表示/非表示（50-80px程度）は無視
-      if (lastHeightRef.current === 0 || heightDiff > 100) {
+      // 初回レンダリング、または幅と高さの両方が大きく変化した場合のみリサイズ
+      // URLバーの表示/非表示（高さのみ変化）は無視
+      // 画面回転など、幅と高さの両方が変化する場合のみリサイズを実行
+      if (lastWidthRef.current === 0 || (widthDiff > 50 && heightDiff > 50)) {
         const dpr = Math.min(window.devicePixelRatio, 2); // 最大2倍まで
-        canvas.width = window.innerWidth * dpr;
+        canvas.width = currentWidth * dpr;
         canvas.height = currentHeight * dpr;
-        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.width = `${currentWidth}px`;
         canvas.style.height = `${currentHeight}px`;
         ctx.scale(dpr, dpr);
         initParticles();
+        lastWidthRef.current = currentWidth;
         lastHeightRef.current = currentHeight;
       }
     };

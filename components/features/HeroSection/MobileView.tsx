@@ -155,21 +155,21 @@ export function MobileView({ tabGroups }: MobileViewProps) {
           /* Home Screen with About Us sections */
           <>
             {/* トップセクション */}
-            <div className="min-h-[calc(100vh-65px)] flex flex-col justify-center items-center px-8 py-12 relative">
+            <div className="min-h-[calc(100vh-65px)] flex flex-col items-center px-8 pt-20 pb-12 relative">
               {/* コンテンツ */}
               <div className="relative z-10 flex flex-col items-center">
                 {/* 会社ロゴ */}
-                <div className="mb-12">
+                <div className="mb-18">
                   <Image
                     src="/images/logo_blackback.png"
                     alt="Omnius"
-                    width={240}
-                    height={72}
+                    width={280}
+                    height={80}
                     priority
                   />
                 </div>
 
-                <h1 className="text-4xl font-black text-center mb-16 leading-tight">
+                <h1 className="text-4xl font-black text-center mb-32 leading-tight">
                   <span className="block bg-gradient-to-t from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                     全ての英知で
                   </span>
@@ -181,7 +181,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                   </span>
                 </h1>
 
-                <div className="flex gap-6 mb-16">
+                <div className="flex gap-6 mb-12">
                   <span className="text-lg text-cyan-400 font-bold">革新し</span>
                   <span className="text-lg text-cyan-400 font-bold">創造し</span>
                   <span className="text-lg text-cyan-400 font-bold">先導する</span>
