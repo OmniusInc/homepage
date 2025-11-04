@@ -83,7 +83,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
   };
 
   return (
-    <div className="mobile-view-container w-full h-screen overflow-hidden bg-black">
+    <div className="mobile-view-container w-full min-h-dvh bg-black">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-gray-800">
         <div className="flex items-center justify-between px-6 py-3">
@@ -150,7 +150,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
       <MobileTiledBackground2D />
 
       {/* Main Content */}
-      <main className={`h-full overflow-y-auto ${viewState.type === 'home' ? 'pt-[65px]' : ''}`}>
+      <main className={`${viewState.type === 'home' ? 'pt-[65px]' : ''}`}>
         {viewState.type === 'home' && (
           /* Home Screen with About Us sections */
           <>
