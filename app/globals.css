@@ -82,11 +82,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  overflow: hidden;
-  height: 100%;
-  position: fixed;
+  margin: 0;
+  padding: 0;
   width: 100%;
-  overscroll-behavior: none;
+  min-height: 100vh;
+  min-height: 100dvh; /* モバイルブラウザのUIバーを考慮した動的ビューポート高さ */
+  overscroll-behavior: none; /* バウンススクロール防止 */
+  touch-action: pan-y; /* モバイルでの縦スクロールを許可 */
 }
 
 /* 3D空間内のテキストレンダリング最適化 */
