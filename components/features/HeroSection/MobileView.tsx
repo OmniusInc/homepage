@@ -166,7 +166,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                   />
                 </div>
 
-                <h1 className="text-4xl font-black text-center mb-32 leading-tight">
+                <h1 className="text-4xl font-black text-center mb-30 leading-tight">
                   <span className="block bg-gradient-to-t from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                     全ての英知で
                   </span>
@@ -178,7 +178,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                   </span>
                 </h1>
 
-                <div className="flex gap-6 mb-12">
+                <div className="flex gap-6 mb-4">
                   <span className="text-lg text-cyan-400 font-bold">革新し</span>
                   <span className="text-lg text-cyan-400 font-bold">創造し</span>
                   <span className="text-lg text-cyan-400 font-bold">先導する</span>
