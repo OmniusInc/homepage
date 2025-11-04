@@ -18,6 +18,8 @@ export default function MobileTiledBackground2D() {
   const particlesRef = useRef<Particle[]>([]);
   const animationFrameRef = useRef<number>();
   const timeRef = useRef(0);
+  const lastHeightRef = useRef<number>(0); // 前回の高さを記録
+  const resizeTimeoutRef = useRef<NodeJS.Timeout>(); // デバウンス用タイマー
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -28,13 +30,21 @@ export default function MobileTiledBackground2D() {
 
     // キャンバスサイズの設定
     const resizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio, 2); // 最大2倍まで
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      ctx.scale(dpr, dpr);
-      initParticles();
+      const currentHeight = window.innerHeight;
+      const heightDiff = Math.abs(currentHeight - lastHeightRef.current);
+
+      // 初回レンダリング、または高さの変化が100px以上の場合のみリサイズ
+      // UIバーの表示/非表示（50-80px程度）は無視
+      if (lastHeightRef.current === 0 || heightDiff > 100) {
+        const dpr = Math.min(window.devicePixelRatio, 2); // 最大2倍まで
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = currentHeight * dpr;
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${currentHeight}px`;
+        ctx.scale(dpr, dpr);
+        initParticles();
+        lastHeightRef.current = currentHeight;
+      }
     };
 
     // パーティクルの初期化
@@ -160,12 +170,27 @@ export default function MobileTiledBackground2D() {
       animationFrameRef.current = requestAnimationFrame(animate);
     };
 
+    // デバウンス付きリサイズハンドラー
+    const handleResize = () => {
+      // 前のタイマーをクリア
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+      // 300ms後にリサイズを実行
+      resizeTimeoutRef.current = setTimeout(() => {
+        resizeCanvas();
+      }, 300);
+    };
+
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', handleResize);
     animate();
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
