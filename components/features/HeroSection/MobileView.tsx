@@ -166,7 +166,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                   />
                 </div>
 
-                <h1 className="text-4xl font-black text-center mb-30 leading-tight">
+                <h1 className="text-4xl font-black text-center mb-28 leading-tight">
                   <span className="block bg-gradient-to-t from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                     全ての英知で
                   </span>
