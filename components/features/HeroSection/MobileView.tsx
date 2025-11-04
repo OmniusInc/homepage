@@ -152,11 +152,11 @@ export function MobileView({ tabGroups }: MobileViewProps) {
           /* Home Screen with About Us sections */
           <>
             {/* トップセクション */}
-            <div className="min-h-[calc(100vh-65px)] flex flex-col items-center px-8 pt-20 pb-12 relative">
+            <div className="min-h-[calc(100vh-65px)] flex flex-col items-center px-8 pt-16 pb-12 relative">
               {/* コンテンツ */}
               <div className="relative z-10 flex flex-col items-center">
                 {/* 会社ロゴ */}
-                <div className="mb-18">
+                <div className="mb-12">
                   <Image
                     src="/images/logo_blackback.png"
                     alt="Omnius"
