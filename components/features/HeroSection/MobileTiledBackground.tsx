@@ -6,6 +6,36 @@ import { RoundedBox, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
+ * パフォーマンス最適化: 波のパターン事前計算
+ * sin/cosのルックアップテーブル（360要素）
+ */
+const WAVE_TABLE_SIZE = 360;
+const WAVE_SIN_TABLE = Array.from({ length: WAVE_TABLE_SIZE }, (_, i) =>
+  Math.sin((i / WAVE_TABLE_SIZE) * Math.PI * 2)
+);
+const WAVE_COS_TABLE = Array.from({ length: WAVE_TABLE_SIZE }, (_, i) =>
+  Math.cos((i / WAVE_TABLE_SIZE) * Math.PI * 2)
+);
+
+/**
+ * 高速sin関数（ルックアップテーブル使用）
+ */
+function fastSin(angle: number): number {
+  const normalized = angle / (Math.PI * 2);
+  const index = Math.floor((normalized - Math.floor(normalized)) * WAVE_TABLE_SIZE);
+  return WAVE_SIN_TABLE[index];
+}
+
+/**
+ * 高速cos関数（ルックアップテーブル使用）
+ */
+function fastCos(angle: number): number {
+  const normalized = angle / (Math.PI * 2);
+  const index = Math.floor((normalized - Math.floor(normalized)) * WAVE_TABLE_SIZE);
+  return WAVE_COS_TABLE[index];
+}
+
+/**
  * モバイル版タイルコンポーネント（PC版の完全再現）
  * 文字やラベルなし、波打つアニメーションのみ
  */
@@ -14,60 +44,69 @@ interface MobileTileProps {
   rotation: [number, number, number];
   rowIndex: number;
   colIndex: number;
+  tileIndex: number;
   normalizedX: number;
   normalizedY: number;
 }
 
-function MobileTile({ position, rotation, rowIndex, colIndex, normalizedX, normalizedY }: MobileTileProps) {
+function MobileTile({
+  position,
+  rotation,
+  rowIndex,
+  colIndex,
+  tileIndex,
+  normalizedX,
+  normalizedY,
+}: MobileTileProps) {
   const tileRef = useRef<THREE.Group>(null);
   const waveRef = useRef<THREE.Group>(null);
+  const frameCountRef = useRef(0); // フレームカウンター（パフォーマンス最適化用）
 
   // PC版と完全に同じ波のアニメーション
   useFrame((state) => {
-    if (waveRef.current) {
-      const waveNormalizedX = normalizedX;
-      const waveNormalizedY = normalizedY;
+    if (!waveRef.current) return;
 
-      // モバイル版: 波の速度を半分に
-      const wave1 =
-        Math.sin(state.clock.elapsedTime * 0.4 + waveNormalizedX * 5 + waveNormalizedY * 3) * 0.8;
-      const wave2 =
-        Math.sin(state.clock.elapsedTime * 0.25 + waveNormalizedX * 3 - waveNormalizedY * 4) * 0.5;
-      const combinedWave = wave1 + wave2;
+    // パフォーマンス最適化: フレームスキップ（3フレームに1回、タイルごとに異なるタイミング）
+    frameCountRef.current++;
+    if (frameCountRef.current % 3 !== tileIndex % 3) return;
 
-      waveRef.current.position.z = combinedWave;
+    const waveNormalizedX = normalizedX;
+    const waveNormalizedY = normalizedY;
 
-      // 波の勾配を計算（速度を半分に）
-      const waveGradientX =
-        Math.cos(state.clock.elapsedTime * 0.4 + waveNormalizedX * 5 + waveNormalizedY * 3) *
-        5 *
-        0.8;
-      const waveGradientY =
-        Math.cos(state.clock.elapsedTime * 0.4 + waveNormalizedX * 5 + waveNormalizedY * 3) *
-        3 *
-        0.8;
+    // パフォーマンス最適化: Math.sin/cos を fastSin/fastCos に置き換え
+    // モバイル版: 波の速度を半分に
+    const wave1 =
+      fastSin(state.clock.elapsedTime * 0.4 + waveNormalizedX * 5 + waveNormalizedY * 3) * 0.8;
+    const wave2 =
+      fastSin(state.clock.elapsedTime * 0.25 + waveNormalizedX * 3 - waveNormalizedY * 4) * 0.5;
+    const combinedWave = wave1 + wave2;
 
-      // 第2の波の勾配を計算（速度を半分に）
-      const wave2GradientX =
-        Math.cos(state.clock.elapsedTime * 0.25 + waveNormalizedX * 3 - waveNormalizedY * 4) *
-        3 *
-        0.5;
-      const wave2GradientY =
-        Math.cos(state.clock.elapsedTime * 0.25 + waveNormalizedX * 3 - waveNormalizedY * 4) *
-        -4 *
-        0.5;
+    waveRef.current.position.z = combinedWave;
 
-      // 列ごとに符号を反転
-      const colFlip = colIndex % 2 === 0 ? 1 : -1;
+    // 波の勾配を計算（速度を半分に）
+    const waveGradientX =
+      fastCos(state.clock.elapsedTime * 0.4 + waveNormalizedX * 5 + waveNormalizedY * 3) * 5 * 0.8;
+    const waveGradientY =
+      fastCos(state.clock.elapsedTime * 0.4 + waveNormalizedX * 5 + waveNormalizedY * 3) * 3 * 0.8;
 
-      const rotationX = -waveGradientY * 0.02;
-      const rotationY = -waveGradientX * 0.015;
-      const rotationZ = -(wave2GradientX + wave2GradientY) * 0.03 * colFlip;
+    // 第2の波の勾配を計算（速度を半分に）
+    const wave2GradientX =
+      fastCos(state.clock.elapsedTime * 0.25 + waveNormalizedX * 3 - waveNormalizedY * 4) * 3 * 0.5;
+    const wave2GradientY =
+      fastCos(state.clock.elapsedTime * 0.25 + waveNormalizedX * 3 - waveNormalizedY * 4) *
+      -4 *
+      0.5;
 
-      waveRef.current.rotation.x = rotation[0] + rotationX;
-      waveRef.current.rotation.y = rotation[1] + rotationY;
-      waveRef.current.rotation.z = rotation[2] + rotationZ;
-    }
+    // 列ごとに符号を反転
+    const colFlip = colIndex % 2 === 0 ? 1 : -1;
+
+    const rotationX = -waveGradientY * 0.02;
+    const rotationY = -waveGradientX * 0.015;
+    const rotationZ = -(wave2GradientX + wave2GradientY) * 0.03 * colFlip;
+
+    waveRef.current.rotation.x = rotation[0] + rotationX;
+    waveRef.current.rotation.y = rotation[1] + rotationY;
+    waveRef.current.rotation.z = rotation[2] + rotationZ;
   });
 
   const tileSize = 8.5;
@@ -163,6 +202,7 @@ function MobileTileGrid() {
           rotation={tile.rotation}
           rowIndex={tile.rowIndex}
           colIndex={tile.colIndex}
+          tileIndex={index}
           normalizedX={tile.normalizedX}
           normalizedY={tile.normalizedY}
         />

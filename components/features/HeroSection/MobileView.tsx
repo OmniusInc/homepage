@@ -41,6 +41,18 @@ export function MobileView({ tabGroups }: MobileViewProps) {
     };
   }, []);
 
+  // ビューステート変更時にセクション0にスクロール
+  useEffect(() => {
+    if (viewState.type === 'tab') {
+      setTimeout(() => {
+        const element = document.getElementById(`section-${viewState.tabIndex}-0`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'auto', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [viewState]);
+
   const handleSectionSelect = (tabIndex: number, sectionIndex: number) => {
     // タブページに遷移（最初にクリックしたセクションのタブを開く）
     setViewState({ type: 'tab', tabIndex });
@@ -50,7 +62,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
     setTimeout(() => {
       const element = document.getElementById(`section-${tabIndex}-${sectionIndex}`);
       if (element) {
-        const headerHeight = 73; // ヘッダーの高さ
+        const headerHeight = 65; // ヘッダーの高さ（py-3で調整）
         const backButtonHeight = 40; // 戻るボタンバーの高さ
         const totalOffset = headerHeight + backButtonHeight;
 
@@ -76,7 +88,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
     <div className="mobile-view-container w-full h-screen overflow-hidden bg-black">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-gray-800">
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-3">
           <button onClick={handleBack} className="focus:outline-none" aria-label="トップに戻る">
             <Image
               src="/images/logo_blackback.png"
@@ -89,7 +101,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
           </button>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-white text-3xl focus:outline-none"
+            className="text-white text-3xl focus:outline-none -mt-2"
             aria-label="メニュー"
           >
             {isMenuOpen ? '✕' : '☰'}
@@ -105,7 +117,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-[64px] left-0 right-0 bottom-0 bg-black/98 backdrop-blur-lg z-40 overflow-y-auto"
+            className="fixed top-[46px] left-0 right-0 bottom-0 bg-black/98 backdrop-blur-lg z-40 overflow-y-auto pb-8"
           >
             <div className="px-6 py-8">
               <nav className="space-y-8">
@@ -142,50 +154,232 @@ export function MobileView({ tabGroups }: MobileViewProps) {
       <MobileTiledBackground />
 
       {/* Main Content */}
-      <main className={`h-full overflow-y-auto ${viewState.type === 'home' ? 'pt-[73px]' : ''}`}>
+      <main className={`h-full overflow-y-auto ${viewState.type === 'home' ? 'pt-[65px]' : ''}`}>
         {viewState.type === 'home' && (
-          /* Home Screen */
-          <div className="min-h-[calc(100vh-73px)] flex flex-col justify-center items-center px-8 py-12 relative">
+          /* Home Screen with About Us sections */
+          <>
+            {/* トップセクション */}
+            <div className="min-h-[calc(100vh-65px)] flex flex-col justify-center items-center px-8 py-12 relative">
+              {/* コンテンツ */}
+              <div className="relative z-10 flex flex-col items-center">
+                <h1 className="text-4xl font-black text-center mb-16 leading-tight">
+                  <span className="block bg-gradient-to-t from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    全ての英知で
+                  </span>
+                  <span className="block bg-gradient-to-t from-blue-500 to-blue-400 bg-clip-text text-transparent">
+                    私たちの未来を
+                  </span>
+                  <span className="block bg-gradient-to-t from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                    切り拓く
+                  </span>
+                </h1>
 
-            {/* コンテンツ */}
-            <div className="relative z-10 flex flex-col items-center">
-            <h1 className="text-4xl font-black text-center mb-6 leading-tight">
-              <span className="block bg-gradient-to-t from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                全ての英知で
-              </span>
-              <span className="block bg-gradient-to-t from-blue-500 to-blue-400 bg-clip-text text-transparent">
-                私たちの未来を
-              </span>
-              <span className="block bg-gradient-to-t from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                切り拓く
-              </span>
-            </h1>
+                <div className="flex gap-6 mb-16">
+                  <span className="text-lg text-cyan-400 font-bold">革新し</span>
+                  <span className="text-lg text-cyan-400 font-bold">創造し</span>
+                  <span className="text-lg text-cyan-400 font-bold">先導する</span>
+                </div>
 
-            <div className="flex gap-6 mb-8">
-              <span className="text-lg text-cyan-400 font-bold">革新し</span>
-              <span className="text-lg text-cyan-400 font-bold">創造し</span>
-              <span className="text-lg text-cyan-400 font-bold">先導する</span>
+                <p className="text-base text-gray-300 leading-relaxed text-center max-w-md mb-20">
+                  AI技術を活用した教育とDX支援を通じて<br/>
+                  個人と企業の可能性を最大化します。
+                </p>
+
+                <button
+                  onClick={() => setIsMenuOpen(true)}
+                  className="px-8 py-4 bg-gradient-to-r from-blue-600/75 to-cyan-500/75 text-white font-bold rounded-lg hover:from-blue-600/90 hover:to-cyan-500/90 transition-all shadow-lg shadow-cyan-500/30 backdrop-blur-sm border border-cyan-500/30"
+                >
+                  詳しく見る
+                </button>
+              </div>
             </div>
 
-            <p className="text-base text-gray-300 leading-relaxed text-center max-w-md mb-12">
-              AI技術を活用した教育とDX支援を通じて<br/>
-              個人と企業の可能性を最大化します。
-            </p>
+            {/* About Us セクション（スクロール可能） */}
+            <div className="relative z-10">
+              {/* ビジョンセクション */}
+              <div className="bg-black/50 backdrop-blur-md border-t border-b border-gray-800 p-6 py-8">
+                <h3 className="text-xs text-gray-400 mb-2">About Us</h3>
+                <h2 className="text-2xl font-black text-white mb-12 pb-2 border-b border-gray-800">
+                  ビジョン
+                </h2>
+                <div className="space-y-8">
+                  <div className="flex justify-center mb-8">
+                    <Image
+                      src="/images/logo_blackback.png"
+                      alt="Omnius"
+                      width={280}
+                      height={84}
+                    />
+                  </div>
+                  <h3 className="text-2xl font-black text-center leading-tight">
+                    <span className="block text-white">全ての英知で</span>
+                    <span className="block bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
+                      私たちの未来を切り拓く
+                    </span>
+                  </h3>
+                  <p className="text-sm text-gray-300 leading-relaxed text-center mb-4">
+                    AI技術を活用した教育とDX支援を通じて<br/>
+                    個人と企業の可能性を最大化します。
+                  </p>
+                </div>
+              </div>
 
-            <button
-              onClick={() => setIsMenuOpen(true)}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600/75 to-cyan-500/75 text-white font-bold rounded-lg hover:from-blue-600/90 hover:to-cyan-500/90 transition-all shadow-lg shadow-cyan-500/30 backdrop-blur-sm border border-cyan-500/30"
-            >
-              詳しく見る
-            </button>
+              {/* ミッションセクション */}
+              <div className="bg-black/50 backdrop-blur-md border-t border-b border-gray-800 p-6 py-8">
+                <h3 className="text-xs text-gray-400 mb-2">About Us</h3>
+                <h2 className="text-2xl font-black text-white mb-12 pb-2 border-b border-gray-800">
+                  ミッション
+                </h2>
+                <div className="space-y-8">
+                  <div className="text-sm uppercase tracking-widest text-blue-400">
+                    Mission
+                  </div>
+                  <h3 className="text-2xl font-black text-white leading-tight">
+                    AI教育とDX支援で<br/>可能性を最大化
+                  </h3>
+                  <p className="text-sm text-gray-300 leading-relaxed mb-4">
+                    最先端のAI技術と深い業界知見を融合させ、<br/>
+                    実践的な教育プログラムと<br/>
+                    コンサルティングサービスを提供
+                  </p>
+                </div>
+              </div>
+
+              {/* バリューセクション */}
+              <div className="bg-black/50 backdrop-blur-md border-t border-b border-gray-800 p-6 py-8">
+                <h3 className="text-xs text-gray-400 mb-2">About Us</h3>
+                <h2 className="text-2xl font-black text-white mb-12 pb-2 border-b border-gray-800">
+                  バリュー
+                </h2>
+                <div className="space-y-8">
+                  <div className="text-sm uppercase tracking-widest text-purple-400">
+                    Value
+                  </div>
+                  <h3 className="text-2xl font-black text-white leading-tight">
+                    革新し、創造し、先導する
+                  </h3>
+                  <p className="text-sm text-gray-300 leading-relaxed mb-4">
+                    常に最先端の技術と知識を追求し、<br/>
+                    新しい価値を創造することで、<br/>
+                    業界をリードしていきます
+                  </p>
+                </div>
+              </div>
+
+              {/* 事業内容セクション */}
+              <div className="bg-black/50 backdrop-blur-md border-t border-b border-gray-800 p-6 py-8">
+                <h3 className="text-xs text-gray-400 mb-2">About Us</h3>
+                <h2 className="text-2xl font-black text-white mb-12 pb-2 border-b border-gray-800">
+                  事業内容
+                </h2>
+                <div className="space-y-8 mb-12">
+                  <h3 className="text-3xl font-black text-white">Our Business</h3>
+                  <p className="text-sm text-gray-400">3つの事業で、変革を支援する</p>
+                </div>
+
+                <div className="space-y-10">
+                  {/* AIアカデミア */}
+                  <div className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 backdrop-blur-sm border border-blue-500/30 p-6 relative overflow-hidden">
+                    <div className="text-5xl font-black text-blue-500/50 mb-3">01</div>
+                    <h4 className="text-xl font-bold text-white mb-3">AI Academia</h4>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                      実務で使えるAI技術を<br/>
+                      体系的に学べる教育プログラム。<br/>
+                      現場で即戦力となる人材を育成します。
+                    </p>
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
+                  </div>
+
+                  {/* DXコンサルティング */}
+                  <div className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 backdrop-blur-sm border border-cyan-500/30 p-6 relative overflow-hidden">
+                    <div className="text-5xl font-black text-cyan-500/50 mb-3">02</div>
+                    <h4 className="text-xl font-bold text-white mb-3">DX Consulting</h4>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                      企業のデジタル変革を<br/>
+                      戦略から実行まで一貫してサポート。<br/>
+                      AI・データ活用による<br/>
+                      新たな価値創造を実現します。
+                    </p>
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-transparent"></div>
+                  </div>
+
+                  {/* システム開発 */}
+                  <div className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 backdrop-blur-sm border border-blue-500/30 p-6 relative overflow-hidden">
+                    <div className="text-5xl font-black text-blue-500/50 mb-3">03</div>
+                    <h4 className="text-xl font-bold text-white mb-3">System Development</h4>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                      最新技術で課題を解決し、<br/>
+                      ビジネスを加速させる<br/>
+                      システム開発をトータルサポート。
+                    </p>
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+
+            {/* Footer */}
+            <footer className="relative z-10 bg-black/80 backdrop-blur-md border-t border-gray-800 py-8 px-6">
+              <div className="space-y-6">
+                {/* 会社名とロゴ */}
+                <div className="text-center">
+                  <Image
+                    src="/images/logo_blackback.png"
+                    alt="Omnius"
+                    width={120}
+                    height={36}
+                    className="mx-auto mb-4"
+                  />
+                  <p className="text-sm text-gray-400">Omnius株式会社</p>
+                </div>
+
+                {/* タブリンク */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 0 })}
+                    className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">ABOUT US</h4>
+                    <p className="text-xs text-gray-400">会社情報</p>
+                  </button>
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 1 })}
+                    className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">BUSINESS</h4>
+                    <p className="text-xs text-gray-400">事業内容</p>
+                  </button>
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 2 })}
+                    className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">JOIN US</h4>
+                    <p className="text-xs text-gray-400">採用情報</p>
+                  </button>
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 3 })}
+                    className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">CONTACT</h4>
+                    <p className="text-xs text-gray-400">お問い合わせ</p>
+                  </button>
+                </div>
+
+                {/* コピーライト */}
+                <div className="text-center pt-6 border-t border-gray-800">
+                  <p className="text-xs text-gray-500">
+                    © 2025 Omnius Corporation. All rights reserved.
+                  </p>
+                </div>
+              </div>
+            </footer>
+          </>
         )}
 
         {viewState.type === 'tab' && (
           /* Tab Page - 全セクションをスクロール表示 */
           <div className="relative z-10">
-            <div className="sticky top-[68px] z-20 bg-black/50 backdrop-blur-md border-b border-gray-800 px-6 py-2">
+            <div className="sticky top-[50px] z-20 bg-black/50 backdrop-blur-md border-b border-gray-800 px-6 py-2">
               <button
                 onClick={handleBack}
                 className="flex items-center gap-1 text-cyan-400 font-bold hover:text-cyan-300 transition-colors text-sm"
@@ -237,7 +431,7 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                         setTimeout(() => {
                           const element = document.getElementById(`section-${viewState.tabIndex}-${targetSectionIndex}`);
                           if (element) {
-                            const headerHeight = 73;
+                            const headerHeight = 65;
                             const backButtonHeight = 40;
                             const totalOffset = headerHeight + backButtonHeight;
                             const scrollContainer = element.closest('main');
@@ -260,6 +454,62 @@ export function MobileView({ tabGroups }: MobileViewProps) {
               </div>
             );
             })}
+
+            {/* Footer */}
+            <footer className="relative z-10 bg-black/80 backdrop-blur-md border-t border-gray-800 py-8 px-6">
+              <div className="space-y-6">
+                {/* 会社名とロゴ */}
+                <div className="text-center">
+                  <Image
+                    src="/images/logo_blackback.png"
+                    alt="Omnius"
+                    width={120}
+                    height={36}
+                    className="mx-auto mb-4"
+                  />
+                  <p className="text-sm text-gray-400">Omnius株式会社</p>
+                </div>
+
+                {/* タブリンク */}
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 0 })}
+                    className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">ABOUT US</h4>
+                    <p className="text-xs text-gray-400">会社情報</p>
+                  </button>
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 1 })}
+                    className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">BUSINESS</h4>
+                    <p className="text-xs text-gray-400">事業内容</p>
+                  </button>
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 2 })}
+                    className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">JOIN US</h4>
+                    <p className="text-xs text-gray-400">採用情報</p>
+                  </button>
+                  <button
+                    onClick={() => setViewState({ type: 'tab', tabIndex: 3 })}
+                    className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
+                  >
+                    <h4 className="text-cyan-400 font-bold text-sm mb-1">CONTACT</h4>
+                    <p className="text-xs text-gray-400">お問い合わせ</p>
+                  </button>
+                </div>
+
+                {/* コピーライト */}
+                <div className="text-center pt-6 border-t border-gray-800">
+                  <p className="text-xs text-gray-500">
+                    © 2024 Omnius Corporation. All rights reserved.
+                  </p>
+                </div>
+              </div>
+            </footer>
           </div>
         )}
       </main>
@@ -781,10 +1031,6 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                 line-height: 1.4 !important;
               }
 
-              /* br タグを無効化（モバイルでは自然な折り返しにする） */
-              .mobile-view-container .mobile-section-content br {
-                display: none;
-              }
 
               /* Application セクションの注釈文字 */
               .mobile-view-container .mobile-section-content p[class*="text-xs"][class*="text-gray-400"] {

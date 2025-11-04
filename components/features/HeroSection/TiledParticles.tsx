@@ -1,12 +1,42 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { RoundedBox, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import Image from 'next/image';
 import { useSpring, animated, config } from '@react-spring/three';
 import { ContactFormContent } from '@/components/features/ContactForm';
+
+/**
+ * パフォーマンス最適化: 波のパターン事前計算
+ * sin/cosのルックアップテーブル（360要素）
+ */
+const WAVE_TABLE_SIZE = 360;
+const WAVE_SIN_TABLE = Array.from({ length: WAVE_TABLE_SIZE }, (_, i) =>
+  Math.sin((i / WAVE_TABLE_SIZE) * Math.PI * 2)
+);
+const WAVE_COS_TABLE = Array.from({ length: WAVE_TABLE_SIZE }, (_, i) =>
+  Math.cos((i / WAVE_TABLE_SIZE) * Math.PI * 2)
+);
+
+/**
+ * 高速sin関数（ルックアップテーブル使用）
+ */
+function fastSin(angle: number): number {
+  const normalized = angle / (Math.PI * 2);
+  const index = Math.floor((normalized - Math.floor(normalized)) * WAVE_TABLE_SIZE);
+  return WAVE_SIN_TABLE[index];
+}
+
+/**
+ * 高速cos関数（ルックアップテーブル使用）
+ */
+function fastCos(angle: number): number {
+  const normalized = angle / (Math.PI * 2);
+  const index = Math.floor((normalized - Math.floor(normalized)) * WAVE_TABLE_SIZE);
+  return WAVE_COS_TABLE[index];
+}
 
 /**
  * セクションデータの型定義
@@ -80,29 +110,30 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
             {/* サポート文 */}
             <p className="text-xl lg:text-3xl text-gray-300 leading-relaxed max-w-4xl">
               最先端のAI技術と深い業界知見を融合させ、<br/>
-              実践的な教育プログラムとコンサルティングサービスを提供
+              実践的な教育プログラムと<br/>
+              コンサルティングサービスを提供
             </p>
           </div>
         ),
       },
       {
-        title: 'ビジョン',
+        title: 'バリュー',
         content: (
           <div className="w-full h-full flex flex-col justify-center px-16 py-12">
             {/* ラベル */}
-            <div className="text-2xl lg:text-4xl uppercase tracking-widest text-cyan-400 mb-8">
-              Vision
+            <div className="text-2xl lg:text-4xl uppercase tracking-widest text-purple-400 mb-8">
+              Value
             </div>
 
             {/* メイン文章 */}
             <h2 className="text-4xl lg:text-7xl font-black text-white leading-tight mb-10">
-              共に成長する<br/>信頼されるパートナー
+              革新し、創造し、<br/>先導する
             </h2>
 
             {/* サポート文 */}
             <p className="text-xl lg:text-3xl text-gray-300 leading-relaxed max-w-4xl">
-              テクノロジーの力で新しい学びと働き方を創造し、<br/>
-              持続可能な成長を実現するパートナー
+              常に最先端の技術と知識を追求し、<br/>
+              新しい価値を創造することで業界をリード
             </p>
           </div>
         ),
@@ -124,7 +155,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                 <div className="text-8xl font-black text-blue-500/50 mb-4">01</div>
                 <h3 className="text-3xl font-bold text-white mb-6">AI Academia</h3>
                 <p className="text-lg text-gray-300 leading-relaxed flex-1">
-                  実務で使えるAI技術を体系的に学べる教育プログラム。
+                  実務で使えるAI技術を体系的に学べる教育プログラム。<br/>
                   現場で即戦力となる人材を育成します。
                 </p>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
@@ -135,7 +166,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                 <div className="text-8xl font-black text-cyan-500/50 mb-4">02</div>
                 <h3 className="text-3xl font-bold text-white mb-6">DX Consulting</h3>
                 <p className="text-lg text-gray-300 leading-relaxed flex-1">
-                  企業のデジタル変革を戦略から実行まで一貫してサポート。
+                  企業のデジタル変革を戦略から実行まで一貫してサポート。<br/>
                   AI・データ活用による新たな価値創造を実現します。
                 </p>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-transparent"></div>
@@ -146,8 +177,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                 <div className="text-8xl font-black text-blue-500/50 mb-4">03</div>
                 <h3 className="text-3xl font-bold text-white mb-6">System Development</h3>
                 <p className="text-lg text-gray-300 leading-relaxed flex-1">
-                  最新技術を活用した高品質なシステム開発。
-                  Salesforceを含む幅広いプラットフォームに対応します。
+                  最新技術で課題を解決し、ビジネスを加速させるシステム開発をトータルサポート。
                 </p>
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent"></div>
               </div>
@@ -225,7 +255,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                   <h3 className="text-3xl font-black text-white mb-2">田中丈士</h3>
                   <p className="text-lg text-cyan-300 mb-4">副社長</p>
                   <p className="text-base text-gray-300 leading-relaxed">
-                    WEB開発とSalesforce開発のスペシャリスト。 技術戦略の立案と実行を担当。
+                    WEB開発とSalesforce開発のスペシャリスト。技術戦略を担当。
                   </p>
                 </div>
                 <div className="absolute top-8 right-8 text-9xl font-black text-cyan-500/10">T</div>
@@ -266,7 +296,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                 <h2 className="text-4xl font-black text-white mb-2">宮嶋大輔</h2>
                 <p className="text-xl text-cyan-300 font-bold mb-3">CEO</p>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  データサイエンスとAI技術を駆使し、ビジネス課題を解決するスペシャリスト。
+                  データサイエンスとAI技術を駆使し、<br/>ビジネス課題を解決するスペシャリスト。
                 </p>
               </div>
             </div>
@@ -349,7 +379,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                 <h2 className="text-4xl font-black text-white mb-2">田中丈士</h2>
                 <p className="text-xl text-blue-300 font-bold mb-3">副社長</p>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  WEB開発からエンタープライズシステムまで幅広い技術領域をカバーするフルスタックエンジニア。
+                  Web・SNS・Salesforceなど、<br/>設計から実装・収益化まで一貫して手がける<br/>フルスタックエンジニア。
                 </p>
               </div>
             </div>
@@ -745,6 +775,7 @@ function WavingTile({
   normalizedX,
   normalizedY,
   colIndex,
+  tileIndex,
   mousePosition,
   isRectangle = false,
   tileWidth = 10,
@@ -763,6 +794,7 @@ function WavingTile({
   normalizedX: number;
   normalizedY: number;
   colIndex: number;
+  tileIndex: number;
   mousePosition: { x: number; y: number };
   isRectangle?: boolean;
   tileWidth?: number;
@@ -780,28 +812,35 @@ function WavingTile({
   const { camera, viewport } = useThree();
   const isSelected = selectedTile === label;
   const hoverZRef = useRef(0); // ホバー時のZ位置を滑らかに補間するための ref
+  const frameCountRef = useRef(0); // フレームカウンター（パフォーマンス最適化用）
 
-  // タブタイルまたは文字タイルの場合は90%、それ以外は通常の透明度
-  const isSpecialTile = Boolean(label || catchChar);
-  const tileOpacity = isSpecialTile ? 0.9 : 1.0;
+  // パフォーマンス最適化: 静的な値をメモ化
+  const tileOpacity = useMemo(() => {
+    const isSpecialTile = Boolean(label || catchChar);
+    return isSpecialTile ? 0.9 : 1.0;
+  }, [label, catchChar]);
 
-  // クリック処理（選択されていない時のみ）
-  const handleClick = (e: React.MouseEvent) => {
-    if (label && onTileClick && !isSelected) {
-      e.stopPropagation();
-      onTileClick(label);
-    }
-  };
+  // パフォーマンス最適化: クリック処理をメモ化
+  const handleClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (label && onTileClick && !isSelected) {
+        e.stopPropagation();
+        onTileClick(label);
+      }
+    },
+    [label, onTileClick, isSelected]
+  );
+
+  // パフォーマンス最適化: タイルサイズをメモ化
+  const scaledTileWidth = useMemo(
+    () => (isSelected ? (tileWidth * 2) / 3 : tileWidth),
+    [isSelected, tileWidth]
+  );
+  const scaledTileHeight = useMemo(() => (isSelected ? tileHeight : tileHeight), [isSelected, tileHeight]);
 
   // アニメーションスプリング
-  // 画面いっぱいに表示: ビューポートサイズに合わせて計算
-
   // スケール倍率は1倍（タイルサイズ自体を変更する）
   const targetScale = 1.0;
-
-  // スケール時のタイルサイズ（横2つ分）
-  const scaledTileWidth = isSelected ? (tileWidth * 2) / 3 : tileWidth;
-  const scaledTileHeight = isSelected ? tileHeight : tileHeight;
 
   // カメラの正面、中央に配置
   const targetX = 0; // 画面中央（X=0）
@@ -871,6 +910,10 @@ function WavingTile({
       return;
     }
 
+    // パフォーマンス最適化: フレームスキップ（3フレームに1回、タイルごとに異なるタイミング）
+    frameCountRef.current++;
+    if (frameCountRef.current % 3 !== tileIndex % 3) return;
+
     // 選択されている場合、またはアニメーション中は、useFrameでの操作をスキップ
     if (!selectedTile && waveRef.current) {
       // 選択されていない場合のみ波のアニメーションを実行
@@ -889,11 +932,12 @@ function WavingTile({
       const waveNormalizedX = normalizedX;
       const waveNormalizedY = normalizedY;
 
+      // パフォーマンス最適化: Math.sin/cos を fastSin/fastCos に置き換え
       // 波のアニメーション - ゆっくりとした動き
       const wave1 =
-        Math.sin(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) * 0.8;
+        fastSin(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) * 0.8;
       const wave2 =
-        Math.sin(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) * 0.5;
+        fastSin(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) * 0.5;
       const combinedWave = wave1 + wave2;
 
       // ホバー時のZ位置を滑らかに補間（lerp）
@@ -914,21 +958,21 @@ function WavingTile({
         // 波に合わせてタイルの角度も変化
         // 波の勾配を計算して、それに沿ってタイルを傾ける（反転）
         const waveGradientX =
-          Math.cos(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) *
+          fastCos(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) *
           5 *
           0.8;
         const waveGradientY =
-          Math.cos(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) *
+          fastCos(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) *
           3 *
           0.8;
 
         // 第2の波の勾配を計算（90度方向の回転用）
         const wave2GradientX =
-          Math.cos(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) *
+          fastCos(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) *
           3 *
           0.5;
         const wave2GradientY =
-          Math.cos(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) *
+          fastCos(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) *
           -4 *
           0.5;
 
@@ -1067,6 +1111,8 @@ function SimpleTileGrid({
   const spacing = 9.01; // タイル間の間隔（10.6 × 0.85）
   const rows = 14; // 軽量化のため削減（20 → 14）
   const cols = 18; // 軽量化のため削減（28 → 18）
+
+  let tileIndex = 0; // パフォーマンス最適化: フレームスキップ用のインデックス
 
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
@@ -1208,6 +1254,7 @@ function SimpleTileGrid({
           normalizedX={adjustedNormalizedX}
           normalizedY={normalizedY}
           colIndex={col}
+          tileIndex={tileIndex}
           mousePosition={mousePosition}
           isRectangle={isRectangle}
           tileWidth={tileWidth}
@@ -1221,6 +1268,7 @@ function SimpleTileGrid({
           sectionRotation={sectionRotation}
         />
       );
+      tileIndex++; // パフォーマンス最適化: インデックスをインクリメント
     }
   }
 
