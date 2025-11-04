@@ -64,15 +64,12 @@ export function MobileView({ tabGroups }: MobileViewProps) {
         const backButtonHeight = 40; // 戻るボタンバーの高さ
         const totalOffset = headerHeight + backButtonHeight;
 
-        // スクロール対象の親要素を取得
-        const scrollContainer = element.closest('main');
-        if (scrollContainer) {
-          const elementTop = element.offsetTop;
-          scrollContainer.scrollTo({
-            top: elementTop - totalOffset,
-            behavior: 'smooth',
-          });
-        }
+        // ドキュメント全体でスクロール（main要素はスクロールコンテナではない）
+        const elementTop = element.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: elementTop - totalOffset,
+          behavior: 'smooth',
+        });
       }
     }, 300);
   };
@@ -443,14 +440,14 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                               const headerHeight = 65;
                               const backButtonHeight = 40;
                               const totalOffset = headerHeight + backButtonHeight;
-                              const scrollContainer = element.closest('main');
-                              if (scrollContainer) {
-                                const elementTop = element.offsetTop;
-                                scrollContainer.scrollTo({
-                                  top: elementTop - totalOffset,
-                                  behavior: 'smooth',
-                                });
-                              }
+
+                              // ドキュメント全体でスクロール（main要素はスクロールコンテナではない）
+                              const elementTop =
+                                element.getBoundingClientRect().top + window.scrollY;
+                              window.scrollTo({
+                                top: elementTop - totalOffset,
+                                behavior: 'smooth',
+                              });
                             }
                           }, 100);
                         }
