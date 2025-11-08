@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import MobileTiledBackground2D from './MobileTiledBackground2D';
 
 interface Section {
@@ -21,7 +22,13 @@ interface MobileViewProps {
 
 type ViewState = { type: 'home' } | { type: 'tab'; tabIndex: number };
 
+/**
+ * タブインデックスからクエリパラメータへの変換
+ */
+const TAB_INDEX_TO_QUERY = ['about-us', 'members', 'careers', 'contact'];
+
 export function MobileView({ tabGroups }: MobileViewProps) {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [viewState, setViewState] = useState<ViewState>({ type: 'home' });
 
@@ -31,13 +38,15 @@ export function MobileView({ tabGroups }: MobileViewProps) {
       // Contactタブ（インデックス3）に遷移
       setViewState({ type: 'tab', tabIndex: 3 });
       setIsMenuOpen(false);
+      // URLにクエリパラメータを追加
+      router.push('?tab=contact');
     };
 
     window.addEventListener('selectContactTile', handleSelectContact);
     return () => {
       window.removeEventListener('selectContactTile', handleSelectContact);
     };
-  }, []);
+  }, [router]);
 
   // ビューステート変更時にセクション0にスクロール
   useEffect(() => {
@@ -55,6 +64,12 @@ export function MobileView({ tabGroups }: MobileViewProps) {
     // タブページに遷移（最初にクリックしたセクションのタブを開く）
     setViewState({ type: 'tab', tabIndex });
     setIsMenuOpen(false);
+
+    // URLにクエリパラメータを追加（/は付けない）
+    const queryValue = TAB_INDEX_TO_QUERY[tabIndex];
+    if (queryValue) {
+      router.push(`?tab=${queryValue}`);
+    }
 
     // ページ遷移完了後にスクロール
     setTimeout(() => {
@@ -77,6 +92,8 @@ export function MobileView({ tabGroups }: MobileViewProps) {
   const handleBack = () => {
     setViewState({ type: 'home' });
     window.scrollTo({ top: 0 });
+    // クエリパラメータを削除してトップに戻る
+    router.push('/');
   };
 
   return (
@@ -339,28 +356,40 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                 {/* タブリンク */}
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 0 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 0 });
+                      router.push('?tab=about-us');
+                    }}
                     className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">ABOUT US</h4>
                     <p className="text-xs text-gray-400">会社情報</p>
                   </button>
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 1 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 1 });
+                      router.push('?tab=members');
+                    }}
                     className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">BUSINESS</h4>
                     <p className="text-xs text-gray-400">事業内容</p>
                   </button>
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 2 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 2 });
+                      router.push('?tab=careers');
+                    }}
                     className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">JOIN US</h4>
                     <p className="text-xs text-gray-400">採用情報</p>
                   </button>
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 3 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 3 });
+                      router.push('?tab=contact');
+                    }}
                     className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">CONTACT</h4>
@@ -479,28 +508,40 @@ export function MobileView({ tabGroups }: MobileViewProps) {
                 {/* タブリンク */}
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 0 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 0 });
+                      router.push('?tab=about-us');
+                    }}
                     className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">ABOUT US</h4>
                     <p className="text-xs text-gray-400">会社情報</p>
                   </button>
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 1 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 1 });
+                      router.push('?tab=members');
+                    }}
                     className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">BUSINESS</h4>
                     <p className="text-xs text-gray-400">事業内容</p>
                   </button>
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 2 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 2 });
+                      router.push('?tab=careers');
+                    }}
                     className="bg-gradient-to-br from-blue-500/20 to-blue-900/10 border border-blue-500/30 rounded-lg p-4 text-center hover:border-blue-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">JOIN US</h4>
                     <p className="text-xs text-gray-400">採用情報</p>
                   </button>
                   <button
-                    onClick={() => setViewState({ type: 'tab', tabIndex: 3 })}
+                    onClick={() => {
+                      setViewState({ type: 'tab', tabIndex: 3 });
+                      router.push('?tab=contact');
+                    }}
                     className="bg-gradient-to-br from-cyan-500/20 to-cyan-900/10 border border-cyan-500/30 rounded-lg p-4 text-center hover:border-cyan-400/50 transition-all"
                   >
                     <h4 className="text-cyan-400 font-bold text-sm mb-1">CONTACT</h4>

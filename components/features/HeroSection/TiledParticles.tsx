@@ -6,6 +6,7 @@ import { RoundedBox, Environment, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import Image from 'next/image';
 import { useSpring, animated, config } from '@react-spring/three';
+import { useRouter } from 'next/navigation';
 import { ContactFormContent } from '@/components/features/ContactForm';
 
 /**
@@ -1346,7 +1347,19 @@ function Scene({
   );
 }
 
+/**
+ * タブラベルからクエリパラメータへの変換マップ
+ */
+const TAB_LABEL_TO_QUERY: Record<string, string> = {
+  'About Us ›': 'about-us',
+  'Members ›': 'members',
+  'Careers ›': 'careers',
+  'Contact ›': 'contact',
+};
+
 export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string | null) => void }) {
+  const router = useRouter();
+
   // クリック拡大処理
   const [selectedTile, setSelectedTile] = useState<string | null>(null);
   // セクション管理
@@ -1366,6 +1379,12 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
     justSelectedRef.current = true; // 直後フラグを立てる
     onTileSelect?.(label);
 
+    // URLにクエリパラメータを追加（/は付けない）
+    const queryValue = TAB_LABEL_TO_QUERY[label];
+    if (queryValue) {
+      router.push(`?tab=${queryValue}`);
+    }
+
     // スケールアニメーション完了後にコンテンツを表示（600ms後）
     setTimeout(() => {
       setShowContent(true);
@@ -1383,6 +1402,9 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
     setRotationDegrees(0);
     setShowContent(false); // コンテンツも非表示に
     onTileSelect?.(null);
+
+    // クエリパラメータを削除してトップに戻る
+    router.push('/');
   };
 
   // カスタムイベントをリッスンしてContactタイルを選択
