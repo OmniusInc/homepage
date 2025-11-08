@@ -27,10 +27,31 @@ type ViewState = { type: 'home' } | { type: 'tab'; tabIndex: number };
  */
 const TAB_INDEX_TO_QUERY = ['about-us', 'members', 'careers', 'contact'];
 
+/**
+ * クエリパラメータからタブインデックスへの変換
+ */
+const QUERY_TO_TAB_INDEX: Record<string, number> = {
+  'about-us': 0,
+  'members': 1,
+  'careers': 2,
+  'contact': 3,
+};
+
 export function MobileView({ tabGroups }: MobileViewProps) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [viewState, setViewState] = useState<ViewState>({ type: 'home' });
+
+  // ページ読み込み時にURLクエリパラメータをチェックして対応するタブを開く
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabQuery = urlParams.get('tab');
+
+    if (tabQuery && QUERY_TO_TAB_INDEX[tabQuery] !== undefined) {
+      const tabIndex = QUERY_TO_TAB_INDEX[tabQuery];
+      setViewState({ type: 'tab', tabIndex });
+    }
+  }, []); // 初回マウント時のみ実行
 
   // カスタムイベントをリッスンしてContactタブに遷移
   useEffect(() => {

@@ -1357,6 +1357,16 @@ const TAB_LABEL_TO_QUERY: Record<string, string> = {
   'Contact ›': 'contact',
 };
 
+/**
+ * クエリパラメータからタブラベルへの変換マップ
+ */
+const QUERY_TO_TAB_LABEL: Record<string, string> = {
+  'about-us': 'About Us ›',
+  'members': 'Members ›',
+  'careers': 'Careers ›',
+  'contact': 'Contact ›',
+};
+
 export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string | null) => void }) {
   const router = useRouter();
 
@@ -1406,6 +1416,18 @@ export function TiledParticles({ onTileSelect }: { onTileSelect?: (tile: string 
     // クエリパラメータを削除してトップに戻る
     router.push('/');
   };
+
+  // ページ読み込み時にURLクエリパラメータをチェックして対応するタブを開く
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabQuery = urlParams.get('tab');
+
+    if (tabQuery && QUERY_TO_TAB_LABEL[tabQuery]) {
+      const tabLabel = QUERY_TO_TAB_LABEL[tabQuery];
+      handleTileClick(tabLabel);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // 初回マウント時のみ実行
 
   // カスタムイベントをリッスンしてContactタイルを選択
   useEffect(() => {
