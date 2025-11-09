@@ -210,7 +210,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
               >
                 <h3 className="text-3xl font-black text-white mb-4">吉川綜一</h3>
                 <p className="text-lg text-gray-300 leading-relaxed">
-                  社長。Omniusの創業者として、ビジョン策定と組織全体の戦略を統括。
+                  社長。ビジョン策定と組織全体の戦略を統括。
                   [プロフィール準備中]
                 </p>
                 <div className="absolute top-8 right-8 text-9xl font-black text-blue-500/10">Y</div>
@@ -256,7 +256,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                   <h3 className="text-3xl font-black text-white mb-2">田中丈士</h3>
                   <p className="text-lg text-cyan-300 mb-4">副社長</p>
                   <p className="text-base text-gray-300 leading-relaxed">
-                    WEB開発とSalesforce開発のスペシャリスト。技術戦略を担当。
+                    システム開発のスペシャリスト。<br/>技術戦略を担当。
                   </p>
                 </div>
                 <div className="absolute top-8 right-8 text-9xl font-black text-cyan-500/10">T</div>
@@ -426,7 +426,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
                     Expertise
                   </h3>
                   <p className="text-xl text-gray-300">
-                    WEB開発（Next.js, React）、Salesforce、プロジェクトマネジメント
+                    開発（WEB, SNS, DX）、Salesforce、プロジェクトマネジメント
                   </p>
                 </div>
 
@@ -592,7 +592,7 @@ export const TAB_SECTIONS: TabSectionConfig[] = [
               <div className="relative overflow-hidden bg-gradient-to-br from-blue-600/25 to-blue-900/15 backdrop-blur-sm border border-blue-500/30 p-8 flex flex-col hover:border-cyan-400 transition-all duration-500">
                 <h3 className="text-3xl font-black text-white mb-4">充実した研修制度</h3>
                 <p className="text-lg text-gray-300 leading-relaxed">
-                  社内勉強会、外部セミナー参加支援、資格取得支援など。
+                  実践形式での社内勉強会、現役スペシャリストへ直接質問が可能。
                 </p>
                 <div className="absolute bottom-8 right-8 text-9xl font-black text-blue-500/10">
                   E
