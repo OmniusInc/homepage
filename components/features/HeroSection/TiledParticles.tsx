@@ -775,7 +775,6 @@ function WavingTile({
   baseZ,
   normalizedX,
   normalizedY,
-  colIndex,
   tileIndex,
   mousePosition,
   isRectangle = false,
@@ -794,7 +793,6 @@ function WavingTile({
   baseZ: number;
   normalizedX: number;
   normalizedY: number;
-  colIndex: number;
   tileIndex: number;
   mousePosition: { x: number; y: number };
   isRectangle?: boolean;
@@ -911,22 +909,28 @@ function WavingTile({
       return;
     }
 
-    // パフォーマンス最適化: フレームスキップ（3フレームに1回、タイルごとに異なるタイミング）
-    frameCountRef.current++;
-    if (frameCountRef.current % 3 !== tileIndex % 3) return;
+    // パフォーマンス最適化: フレームスキップ（2フレームに1回、タイルごとに異なるタイミング）
+    // ただし、タブタイル（長方形タイル）は毎フレーム更新して滑らかに
+    if (!isRectangle) {
+      frameCountRef.current++;
+      if (frameCountRef.current % 2 !== tileIndex % 2) return;
+    }
 
     // 選択されている場合、またはアニメーション中は、useFrameでの操作をスキップ
     if (!selectedTile && waveRef.current) {
       // 選択されていない場合のみ波のアニメーションを実行
-      // マウス位置との距離を計算
-      const dx = position[0] - mousePosition.x;
-      const dy = position[1] - mousePosition.y;
+      // ホバー判定: タブタイル（長方形タイル）のみ
+      let isHovered = false;
+      if (isRectangle) {
+        // マウス位置との距離を計算
+        const dx = position[0] - mousePosition.x;
+        const dy = position[1] - mousePosition.y;
 
-      // マウスがタイルの上にあるかをチェック（長方形タイルのみ反応）
-      const tileHalfWidth = tileWidth / 2;
-      const tileHalfHeight = tileHeight / 2;
-      const isHovered =
-        isRectangle && Math.abs(dx) < tileHalfWidth && Math.abs(dy) < tileHalfHeight;
+        // マウスがタイルの上にあるかをチェック
+        const tileHalfWidth = tileWidth / 2;
+        const tileHalfHeight = tileHeight / 2;
+        isHovered = Math.abs(dx) < tileHalfWidth && Math.abs(dy) < tileHalfHeight;
+      }
 
       // 波のアニメーション用の正規化座標
       // 長方形タイルの場合は、実際の3D空間での位置を使用して中心基準で計算
@@ -934,16 +938,13 @@ function WavingTile({
       const waveNormalizedY = normalizedY;
 
       // パフォーマンス最適化: Math.sin/cos を fastSin/fastCos に置き換え
-      // 波のアニメーション - ゆっくりとした動き
-      const wave1 =
-        fastSin(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) * 0.8;
-      const wave2 =
-        fastSin(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) * 0.5;
-      const combinedWave = wave1 + wave2;
+      // 波のアニメーション - 横方向（X方向）の1つの波
+      const combinedWave =
+        fastSin(state.clock.elapsedTime * 0.6 + waveNormalizedX * 5) * 0.8;
 
       // ホバー時のZ位置を滑らかに補間（lerp）
       const targetHoverZ = isHovered ? 4 : 0;
-      hoverZRef.current += (targetHoverZ - hoverZRef.current) * 0.15; // 0.15 = 滑らかさの係数
+      hoverZRef.current += (targetHoverZ - hoverZRef.current) * 0.25; // 0.25 = より速い補間でレスポンシブに
 
       waveRef.current.position.z = combinedWave + hoverZRef.current;
 
@@ -957,32 +958,13 @@ function WavingTile({
         waveRef.current.rotation.z = rotation[2];
       } else {
         // 波に合わせてタイルの角度も変化
-        // 波の勾配を計算して、それに沿ってタイルを傾ける（反転）
-        const waveGradientX =
-          fastCos(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) *
-          5 *
-          0.8;
-        const waveGradientY =
-          fastCos(state.clock.elapsedTime * 0.8 + waveNormalizedX * 5 + waveNormalizedY * 3) *
-          3 *
-          0.8;
+        // 波の勾配を計算して、それに沿ってタイルを傾ける（横方向の1つの波）
+        const waveGradient =
+          fastCos(state.clock.elapsedTime * 0.6 + waveNormalizedX * 5) * 5 * 0.8;
 
-        // 第2の波の勾配を計算（90度方向の回転用）
-        const wave2GradientX =
-          fastCos(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) *
-          3 *
-          0.5;
-        const wave2GradientY =
-          fastCos(state.clock.elapsedTime * 0.5 + waveNormalizedX * 3 - waveNormalizedY * 4) *
-          -4 *
-          0.5;
-
-        // 列ごとに符号を反転
-        const colFlip = colIndex % 2 === 0 ? 1 : -1;
-
-        const rotationX = -waveGradientY * 0.02; // 波による回転のみ
-        const rotationY = -waveGradientX * 0.015; // 波による回転のみ
-        const rotationZ = -(wave2GradientX + wave2GradientY) * 0.03 * colFlip; // 90度方向の回転（列ごとに反転、角度幅を増加）
+        const rotationX = 0; // 横方向の波なのでX軸回転なし
+        const rotationY = -waveGradient * 0.015; // Y軸回転（波の進行方向に傾く）
+        const rotationZ = 0; // Z軸回転なし
 
         waveRef.current.rotation.x = rotation[0] + rotationX;
         waveRef.current.rotation.y = rotation[1] + rotationY;
@@ -1254,7 +1236,6 @@ function SimpleTileGrid({
           baseZ={adjustedCurvature}
           normalizedX={adjustedNormalizedX}
           normalizedY={normalizedY}
-          colIndex={col}
           tileIndex={tileIndex}
           mousePosition={mousePosition}
           isRectangle={isRectangle}
